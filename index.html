@@ -6,7 +6,7 @@
 <title>The machinery of government</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
 <style>
 :root{
   --paper:#F6F7F9; --card:#FFFFFF; --ink:#1B2233; --muted:#5B6475; --faint:#8A92A3;
@@ -23,7 +23,7 @@
 }
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 @media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
+:root:not([data-theme="light"]){
     --paper:#0D1220; --card:#161D2E; --ink:#EDF0F6; --muted:#A3ABBD; --faint:#737C90;
     --line:#39445C; --line-soft:#232C40;
     --blue:#6F9BFF; --red:#FF5C70; --gold:#FFC53D; --gold-ink:#FFC53D;
@@ -42,256 +42,485 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 html{-webkit-text-size-adjust:100%}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;
   padding:0 env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px)}
-
-header{max-width:1180px;margin:0 auto;padding:clamp(40px,8vw,88px) 24px clamp(22px,4vw,36px);text-align:center}
-.mark{width:44px;height:44px;margin:0 auto 22px;color:var(--gold)}
-h1{font-size:clamp(34px,6.2vw,64px);line-height:1.02;letter-spacing:-.035em;font-weight:700;margin:0}
-.lede{font-size:clamp(16px,2vw,19px);color:var(--muted);margin:16px auto 0;max-width:34ch;line-height:1.45}
-.key{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 26px;margin-top:22px;font-size:13px;color:var(--muted)}
-.key span{display:inline-flex;align-items:center;gap:9px}
-.key i{display:inline-block;width:28px;height:0;border-top:2px solid var(--line)}
-.key i.d{border-top-style:dashed}
-.key i.g{border-top:2px dashed var(--gold)}
-
-/* lens control */
+#appA header{max-width:1180px;margin:0 auto;padding:clamp(40px,8vw,88px) 24px clamp(22px,4vw,36px);text-align:center}
+#appA .mark{width:44px;height:44px;margin:0 auto 22px;color:var(--gold)}
+#appA h1{font-size:clamp(34px,6.2vw,64px);line-height:1.02;letter-spacing:-.035em;font-weight:700;margin:0}
+#appA .lede{font-size:clamp(16px,2vw,19px);color:var(--muted);margin:16px auto 0;max-width:34ch;line-height:1.45}
+#appA .key{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 26px;margin-top:22px;font-size:13px;color:var(--muted)}
+#appA .key span{display:inline-flex;align-items:center;gap:9px}
+#appA .key i{display:inline-block;width:28px;height:0;border-top:2px solid var(--line)}
+#appA .key i.d{border-top-style:dashed}
+#appA .key i.g{border-top:2px dashed var(--gold)}
+#appA /* lens control */
 .lensbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:20;display:flex;justify-content:center;padding:0 16px;margin:6px 0 0;pointer-events:none}
-.seg-wrap{pointer-events:auto;display:flex;align-items:center;gap:12px;padding:6px 6px 6px 18px;border-radius:999px;
+#appA .seg-wrap{pointer-events:auto;display:flex;align-items:center;gap:12px;padding:6px 6px 6px 18px;border-radius:999px;
   background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);
   border:1px solid var(--line-soft);box-shadow:0 8px 30px rgba(27,34,51,.10);max-width:100%}
-.seg-label{font-size:13.5px;font-weight:600;white-space:nowrap}
-.seg{position:relative;display:flex;background:color-mix(in srgb,var(--ink) 6%,transparent);border-radius:999px;padding:3px}
-.seg button{position:relative;z-index:1;appearance:none;border:0;background:transparent;font:600 13.5px var(--sans);color:var(--muted);
+#appA .seg-label{font-size:13.5px;font-weight:600;white-space:nowrap}
+#appA .seg{position:relative;display:flex;background:color-mix(in srgb,var(--ink) 6%,transparent);border-radius:999px;padding:3px}
+#appA .seg button{position:relative;z-index:1;appearance:none;border:0;background:transparent;font:600 13.5px var(--sans);color:var(--muted);
   padding:9px 15px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:color .3s var(--ease)}
-.seg button[aria-pressed="true"]{color:#fff}
-.seg button[data-lens=""][aria-pressed="true"]{color:var(--ink)!important}
-.seg button:focus-visible{outline:3px solid var(--blue);outline-offset:1px}
-.thumb{position:absolute;top:3px;bottom:3px;left:0;width:0;border-radius:999px;background:var(--ink);box-shadow:0 2px 8px rgba(27,34,51,.2);
+#appA .seg button[aria-pressed="true"]{color:#fff}
+#appA .seg button[data-lens=""][aria-pressed="true"]{color:var(--ink)!important}
+#appA .seg button:focus-visible{outline:3px solid var(--blue);outline-offset:1px}
+#appA .thumb{position:absolute;top:3px;bottom:3px;left:0;width:0;border-radius:999px;background:var(--ink);box-shadow:0 2px 8px rgba(27,34,51,.2);
   transition:transform .5s var(--spring),width .5s var(--spring),background .35s var(--ease)}
-.lens-cap{max-width:640px;margin:14px auto 0;padding:0 24px;text-align:center;font-family:var(--serif);font-size:17px;line-height:1.5;color:var(--muted);
+#appA .lens-cap{max-width:640px;margin:14px auto 0;padding:0 24px;text-align:center;font-family:var(--serif);font-size:17px;line-height:1.5;color:var(--muted);
   min-height:0;transition:opacity .35s var(--ease)}
-.lens-cap:empty{display:none}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:#0D1220}}
-:root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#0D1220}
-@media (max-width:560px){
-  .seg-wrap{padding:5px;gap:0}
-  .seg-label{display:none}
-  .seg button{padding:9px 12px;font-size:13px}
+#appA .lens-cap:empty{display:none}
+@media (prefers-color-scheme:dark){
+:root:not([data-theme="light"]) #appA .seg button[aria-pressed="true"]{color:#0D1220}
 }
-
-.tree{position:relative;max-width:1180px;margin:0 auto;padding:44px 24px 40px}
-svg.wires{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
-.wire{fill:none;stroke:var(--line);stroke-width:1.6;stroke-linecap:round;transition:stroke .45s var(--ease),stroke-width .45s var(--ease),opacity .45s}
-.wire.dash{stroke-dasharray:5 6}
-.wire.chainw{stroke:color-mix(in srgb,var(--blue) 45%,var(--line));stroke-width:2.2}
-.wire.chainl{stroke:color-mix(in srgb,var(--red) 40%,var(--line));stroke-width:2.2}
-.wire.gold{stroke:var(--gold);stroke-dasharray:3 6;stroke-width:1.8}
-.wire.lit{stroke:var(--accent,var(--blue));stroke-width:2.6}
-.tree.focus .wire:not(.lit){opacity:.3}
-
-.top{display:flex;justify-content:center;margin-bottom:56px}
-.realm{position:relative;border-radius:44px;padding:22px 22px 60px;margin-bottom:28px;border:1px solid var(--line-soft);
+:root[data-theme="dark"] #appA .seg button[aria-pressed="true"]{color:#0D1220}
+@media (max-width:560px){
+#appA .seg-wrap{padding:5px;gap:0}
+#appA .seg-label{display:none}
+#appA .seg button{padding:9px 12px;font-size:13px}
+}
+#appA .tree{position:relative;max-width:1180px;margin:0 auto;padding:44px 24px 40px}
+#appA svg.wires{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+#appA .wire{fill:none;stroke:var(--line);stroke-width:1.6;stroke-linecap:round;transition:stroke .45s var(--ease),stroke-width .45s var(--ease),opacity .45s}
+#appA .wire.dash{stroke-dasharray:5 6}
+#appA .wire.chainw{stroke:color-mix(in srgb,var(--blue) 45%,var(--line));stroke-width:2.2}
+#appA .wire.chainl{stroke:color-mix(in srgb,var(--red) 40%,var(--line));stroke-width:2.2}
+#appA .wire.gold{stroke:var(--gold);stroke-dasharray:3 6;stroke-width:1.8}
+#appA .wire.lit{stroke:var(--accent,var(--blue));stroke-width:2.6}
+#appA .tree.focus .wire:not(.lit){opacity:.3}
+#appA .top{display:flex;justify-content:center;margin-bottom:56px}
+#appA .realm{position:relative;border-radius:44px;padding:22px 22px 60px;margin-bottom:28px;border:1px solid var(--line-soft);
   background:color-mix(in srgb,var(--ink) 2.5%,transparent);transition:background .5s var(--ease),border-color .5s,box-shadow .5s}
-.levels{display:grid;grid-template-columns:minmax(0,2.7fr) minmax(0,1fr);gap:24px;align-items:stretch}
-.terr{position:relative;border-radius:34px;padding:28px 16px 50px;border:1px solid transparent;display:flex;flex-direction:column;align-items:center;min-width:0;
+#appA .levels{display:grid;grid-template-columns:minmax(0,2.7fr) minmax(0,1fr);gap:24px;align-items:stretch}
+#appA .terr{position:relative;border-radius:34px;padding:28px 16px 50px;border:1px solid transparent;display:flex;flex-direction:column;align-items:center;min-width:0;
   transition:background .5s var(--ease),border-color .5s,box-shadow .5s}
-.terr.t-nat{background:color-mix(in srgb,var(--blue) 5%,transparent)}
-.terr.t-loc{background:color-mix(in srgb,var(--red) 5%,transparent)}
-.terr>.level{margin-bottom:56px}
-.realm.lit{border-color:var(--line);background:color-mix(in srgb,var(--ink) 6%,transparent);box-shadow:0 0 0 6px var(--glow-ink)}
-.terr.t-nat.lit{border-color:color-mix(in srgb,var(--blue) 45%,transparent);background:color-mix(in srgb,var(--blue) 11%,transparent);box-shadow:0 0 0 6px var(--glow-blue)}
-.terr.t-loc.lit{border-color:color-mix(in srgb,var(--red) 45%,transparent);background:color-mix(in srgb,var(--red) 11%,transparent);box-shadow:0 0 0 6px var(--glow-red)}
-
-.lanes{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr);gap:64px;width:100%;align-items:start}
-.chain{display:flex;flex-direction:column;align-items:center;gap:40px}
-
-.node{appearance:none;font:600 15.5px/1.2 var(--sans);letter-spacing:-.01em;color:var(--ink);
+#appA .terr.t-nat{background:color-mix(in srgb,var(--blue) 5%,transparent)}
+#appA .terr.t-loc{background:color-mix(in srgb,var(--red) 5%,transparent)}
+#appA .terr>.level{margin-bottom:56px}
+#appA .realm.lit{border-color:var(--line);background:color-mix(in srgb,var(--ink) 6%,transparent);box-shadow:0 0 0 6px var(--glow-ink)}
+#appA .terr.t-nat.lit{border-color:color-mix(in srgb,var(--blue) 45%,transparent);background:color-mix(in srgb,var(--blue) 11%,transparent);box-shadow:0 0 0 6px var(--glow-blue)}
+#appA .terr.t-loc.lit{border-color:color-mix(in srgb,var(--red) 45%,transparent);background:color-mix(in srgb,var(--red) 11%,transparent);box-shadow:0 0 0 6px var(--glow-red)}
+#appA .lanes{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr);gap:64px;width:100%;align-items:start}
+#appA .chain{display:flex;flex-direction:column;align-items:center;gap:40px}
+#appA .node{appearance:none;font:600 15.5px/1.2 var(--sans);letter-spacing:-.01em;color:var(--ink);
   background:var(--card);border:1px solid var(--line-soft);border-radius:999px;padding:13px 22px;
   box-shadow:var(--shadow);cursor:pointer;position:relative;z-index:1;text-align:center;
   transition:transform .5s var(--spring),box-shadow .35s var(--ease),border-color .35s,background .35s,opacity .35s;
   -webkit-tap-highlight-color:transparent}
-.node:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
-.node:active{transform:scale(.96);transition-duration:.15s}
-.node:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
-.chain .node{min-width:200px}
-.level{font-size:18px;padding:17px 30px;color:#fff;border:0;letter-spacing:-.015em}
-.level.rep{background:var(--ink);color:var(--paper);font-size:clamp(17px,2.2vw,21px);padding:20px 34px}
-.level.nat{background:var(--blue)}
-.level.loc{background:var(--red)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .level.nat,:root:not([data-theme="light"]) .level.loc{color:#0D1220}}
-:root[data-theme="dark"] .level.nat,:root[data-theme="dark"] .level.loc{color:#0D1220}
-
-.terr.t-nat .chain .node{background:var(--card);border:2px solid color-mix(in srgb,var(--blue) 70%,transparent);color:var(--blue);
+#appA .node:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+#appA .node:active{transform:scale(.96);transition-duration:.15s}
+#appA .node:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+#appA .chain .node{min-width:200px}
+#appA .level{font-size:18px;padding:17px 30px;color:#fff;border:0;letter-spacing:-.015em}
+#appA .level.rep{background:var(--ink);color:var(--paper);font-size:clamp(17px,2.2vw,21px);padding:20px 34px}
+#appA .level.nat{background:var(--blue)}
+#appA .level.loc{background:var(--red)}
+@media (prefers-color-scheme:dark){
+:root:not([data-theme="light"]) #appA .level.nat,:root:not([data-theme="light"]) #appA .level.loc{color:#0D1220}
+}
+:root[data-theme="dark"] #appA .level.nat,:root[data-theme="dark"] #appA .level.loc{color:#0D1220}
+#appA .terr.t-nat .chain .node{background:var(--card);border:2px solid color-mix(in srgb,var(--blue) 70%,transparent);color:var(--blue);
   font-size:17px;font-weight:700;padding:15px 28px;min-width:230px;box-shadow:0 4px 14px color-mix(in srgb,var(--blue) 22%,transparent)}
-.terr.t-loc .chain .node{background:var(--card);border:2px solid color-mix(in srgb,var(--red) 65%,transparent);color:var(--red);
+#appA .terr.t-loc .chain .node{background:var(--card);border:2px solid color-mix(in srgb,var(--red) 65%,transparent);color:var(--red);
   font-size:17px;font-weight:700;padding:15px 28px;min-width:200px;box-shadow:0 4px 14px color-mix(in srgb,var(--red) 20%,transparent)}
-.terr .chain .node:hover{box-shadow:var(--shadow-up)}
-.terr.t-nat .chain .node.lit{box-shadow:0 0 0 4px var(--glow-blue),var(--shadow-up)}
-.terr.t-loc .chain .node.lit{box-shadow:0 0 0 4px var(--glow-red),var(--shadow-up)}
-@media (max-width:720px){.terr.t-nat .chain .node{min-width:200px}}
-
-.lane>.node{background:var(--card);border:2px solid color-mix(in srgb,var(--gold) 80%,transparent);color:var(--gold-ink);font-size:17px;font-weight:700;padding:15px 20px;
+#appA .terr .chain .node:hover{box-shadow:var(--shadow-up)}
+#appA .terr.t-nat .chain .node.lit{box-shadow:0 0 0 4px var(--glow-blue),var(--shadow-up)}
+#appA .terr.t-loc .chain .node.lit{box-shadow:0 0 0 4px var(--glow-red),var(--shadow-up)}
+@media (max-width:720px){
+#appA .terr.t-nat .chain .node{min-width:200px}
+}
+#appA .lane>.node{background:var(--card);border:2px solid color-mix(in srgb,var(--gold) 80%,transparent);color:var(--gold-ink);font-size:17px;font-weight:700;padding:15px 20px;
   box-shadow:0 4px 14px color-mix(in srgb,var(--gold) 24%,transparent)}
-.lane>.group{border:2px solid color-mix(in srgb,var(--gold) 80%,transparent);box-shadow:0 4px 14px color-mix(in srgb,var(--gold) 24%,transparent)}
-.lane>.split{border:2px solid color-mix(in srgb,var(--gold) 80%,transparent);box-shadow:0 4px 14px color-mix(in srgb,var(--gold) 24%,transparent)}
-.split>.node.split-head{color:var(--gold-ink);font-size:17px;font-weight:700;padding:15px 20px 12px}
-.halves{border-top-color:color-mix(in srgb,var(--gold) 45%,transparent)}
-.node.half+.node.half{border-left-color:color-mix(in srgb,var(--gold) 45%,transparent)}
-.node.half b{color:var(--gold-ink)}
-.lane .group>.node.head,.lane .gocc>.node.head,.lane .related>.node.head{color:var(--gold-ink);font-weight:700;font-size:16.5px}
-.lane .chips .node,.lane .related .node.rc{background:var(--card);border:1.5px solid color-mix(in srgb,var(--gold) 65%,transparent);color:var(--gold-ink);font-weight:700;
+#appA .lane>.group{border:2px solid color-mix(in srgb,var(--gold) 80%,transparent);box-shadow:0 4px 14px color-mix(in srgb,var(--gold) 24%,transparent)}
+#appA .lane>.split{border:2px solid color-mix(in srgb,var(--gold) 80%,transparent);box-shadow:0 4px 14px color-mix(in srgb,var(--gold) 24%,transparent)}
+#appA .split>.node.split-head{color:var(--gold-ink);font-size:17px;font-weight:700;padding:15px 20px 12px}
+#appA .halves{border-top-color:color-mix(in srgb,var(--gold) 45%,transparent)}
+#appA .node.half+.node.half{border-left-color:color-mix(in srgb,var(--gold) 45%,transparent)}
+#appA .node.half b{color:var(--gold-ink)}
+#appA .lane .group>.node.head,#appA .lane .gocc>.node.head,#appA .lane .related>.node.head{color:var(--gold-ink);font-weight:700;font-size:16.5px}
+#appA .lane .chips .node,#appA .lane .related .node.rc{background:var(--card);border:1.5px solid color-mix(in srgb,var(--gold) 65%,transparent);color:var(--gold-ink);font-weight:700;
   box-shadow:0 3px 10px color-mix(in srgb,var(--gold) 18%,transparent)}
-.lane>.node.lit,.lane .chips .node.lit,.lane .related .node.rc.lit{box-shadow:0 0 0 4px var(--glow-gold),var(--shadow-up)}
-.dot::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:color-mix(in srgb,var(--gold) 80%,transparent);margin-right:10px;vertical-align:1px}
-.tree.focus .node:not(.lit){opacity:.4}
-.node.lit{box-shadow:0 0 0 4px var(--glow),var(--shadow-up)}
-.node.lit.level{box-shadow:0 0 0 5px var(--glow),var(--shadow-up)}
-
-/* territory labels */
+#appA .lane>.node.lit,#appA .lane .chips .node.lit,#appA .lane .related .node.rc.lit{box-shadow:0 0 0 4px var(--glow-gold),var(--shadow-up)}
+#appA .dot::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:color-mix(in srgb,var(--gold) 80%,transparent);margin-right:10px;vertical-align:1px}
+#appA .tree.focus .node:not(.lit){opacity:.4}
+#appA .node.lit{box-shadow:0 0 0 4px var(--glow),var(--shadow-up)}
+#appA .node.lit.level{box-shadow:0 0 0 5px var(--glow),var(--shadow-up)}
+#appA /* territory labels */
 .node.tab{position:absolute;bottom:0;left:24px;transform:translateY(50%);z-index:3;font-size:14.5px;padding:10px 18px 10px 12px;
   display:inline-flex;align-items:center;gap:10px;white-space:nowrap;box-shadow:var(--shadow-up)}
-.node.tab:hover{transform:translateY(calc(50% - 2px))}
-.node.tab:active{transform:translateY(50%) scale(.96)}
-.realm>.node.tab{left:50%;transform:translate(-50%,50%)}
-.realm>.node.tab:hover{transform:translate(-50%,calc(50% - 2px))}
-.realm>.node.tab:active{transform:translate(-50%,50%) scale(.96)}
-.tab .ic{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;flex:none;color:#fff}
-.realm>.tab .ic{background:var(--ink);color:var(--paper)}
-.t-nat>.tab{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 35%,transparent)}
-.t-nat>.tab .ic{background:var(--blue)}
-.t-loc>.tab{color:var(--red);border-color:color-mix(in srgb,var(--red) 35%,transparent)}
-.t-loc>.tab .ic{background:var(--red)}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .terr>.tab .ic{color:#0D1220}}
-:root[data-theme="dark"] .terr>.tab .ic{color:#0D1220}
-
-/* lane */
+#appA .node.tab:hover{transform:translateY(calc(50% - 2px))}
+#appA .node.tab:active{transform:translateY(50%) scale(.96)}
+#appA .realm>.node.tab{left:50%;transform:translate(-50%,50%)}
+#appA .realm>.node.tab:hover{transform:translate(-50%,calc(50% - 2px))}
+#appA .realm>.node.tab:active{transform:translate(-50%,50%) scale(.96)}
+#appA .tab .ic{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;flex:none;color:#fff}
+#appA .realm>.tab .ic{background:var(--ink);color:var(--paper)}
+#appA .t-nat>.tab{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 35%,transparent)}
+#appA .t-nat>.tab .ic{background:var(--blue)}
+#appA .t-loc>.tab{color:var(--red);border-color:color-mix(in srgb,var(--red) 35%,transparent)}
+#appA .t-loc>.tab .ic{background:var(--red)}
+@media (prefers-color-scheme:dark){
+:root:not([data-theme="light"]) #appA .terr>.tab .ic{color:#0D1220}
+}
+:root[data-theme="dark"] #appA .terr>.tab .ic{color:#0D1220}
+#appA /* lane */
 .lane{position:relative;z-index:1;border:1.6px dashed var(--line);border-radius:32px;padding:26px 20px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
-.split{position:relative;z-index:1;background:var(--card);border:1px solid var(--line-soft);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .35s var(--ease),opacity .35s}
-.split>.node.split-head{display:block;width:100%;text-align:left;border:0;border-radius:0;box-shadow:none;background:transparent;padding:13px 18px 11px}
-.halves{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line-soft)}
-.node.half{border:0;border-radius:0;box-shadow:none;background:transparent;padding:11px 12px 12px;text-align:center}
-.node.half+.node.half{border-left:1px solid var(--line-soft)}
-.node.half b{display:block;font-size:16px;font-weight:700;letter-spacing:-.01em}
-.node.half small{display:block;font:500 12px var(--sans);color:var(--muted);margin-top:2px}
-.split>.node:hover,.node.half:hover{transform:none;box-shadow:none;background:color-mix(in srgb,var(--gold) 9%,var(--card))}
-.split>.node:active,.node.half:active{transform:none;background:color-mix(in srgb,var(--gold) 16%,var(--card))}
-.split .node.lit{box-shadow:none;background:color-mix(in srgb,var(--gold) 14%,var(--card))}
-.split:has(.lit){box-shadow:0 0 0 4px var(--glow-gold),var(--shadow-up)}
-.tree.focus .split .node:not(.lit){opacity:.55}
-.lane-title{font-size:13px;color:var(--muted);text-align:center;margin:-4px 0 6px}
-.lane>.node{border-radius:18px;text-align:left}
-.group{background:color-mix(in srgb,var(--gold) 3%,var(--card));border:1px solid var(--line-soft);border-radius:26px;padding:12px;display:flex;flex-direction:column;gap:10px}
-.group>.node.head{align-self:flex-start;box-shadow:none;background:transparent;border-color:transparent;padding:8px 10px;font-size:15.5px}
-.group>.node.head:hover{background:var(--card);box-shadow:var(--shadow)}
-.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.chips .node{font-size:14px;padding:11px 14px;border-radius:14px}
-.chips .wide{grid-column:1/-1}
-
-/* GOCC boundary with related corporation straddling it */
+#appA .split{position:relative;z-index:1;background:var(--card);border:1px solid var(--line-soft);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .35s var(--ease),opacity .35s}
+#appA .split>.node.split-head{display:block;width:100%;text-align:left;border:0;border-radius:0;box-shadow:none;background:transparent;padding:13px 18px 11px}
+#appA .halves{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line-soft)}
+#appA .node.half{border:0;border-radius:0;box-shadow:none;background:transparent;padding:11px 12px 12px;text-align:center}
+#appA .node.half+.node.half{border-left:1px solid var(--line-soft)}
+#appA .node.half b{display:block;font-size:16px;font-weight:700;letter-spacing:-.01em}
+#appA .node.half small{display:block;font:500 12px var(--sans);color:var(--muted);margin-top:2px}
+#appA .split>.node:hover,#appA .node.half:hover{transform:none;box-shadow:none;background:color-mix(in srgb,var(--gold) 9%,var(--card))}
+#appA .split>.node:active,#appA .node.half:active{transform:none;background:color-mix(in srgb,var(--gold) 16%,var(--card))}
+#appA .split .node.lit{box-shadow:none;background:color-mix(in srgb,var(--gold) 14%,var(--card))}
+#appA .split:has(.lit){box-shadow:0 0 0 4px var(--glow-gold),var(--shadow-up)}
+#appA .tree.focus .split .node:not(.lit){opacity:.55}
+#appA .lane-title{font-size:13px;color:var(--muted);text-align:center;margin:-4px 0 6px}
+#appA .lane>.node{border-radius:18px;text-align:left}
+#appA .group{background:color-mix(in srgb,var(--gold) 3%,var(--card));border:1px solid var(--line-soft);border-radius:26px;padding:12px;display:flex;flex-direction:column;gap:10px}
+#appA .group>.node.head{align-self:flex-start;box-shadow:none;background:transparent;border-color:transparent;padding:8px 10px;font-size:15.5px}
+#appA .group>.node.head:hover{background:var(--card);box-shadow:var(--shadow)}
+#appA .chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#appA .chips .node{font-size:14px;padding:11px 14px;border-radius:14px}
+#appA .chips .wide{grid-column:1/-1}
+#appA /* GOCC boundary with related corporation straddling it */
 .gocc{background:color-mix(in srgb,var(--gold) 8%,var(--card));border:1.6px solid color-mix(in srgb,var(--gold) 55%,transparent);border-radius:22px;padding:10px;display:flex;flex-direction:column;gap:10px;position:relative}
-.gocc.cut{padding-bottom:0}
-.related{position:relative;z-index:1;border:1.5px dashed var(--line);border-radius:18px;padding:8px 8px 10px;background:transparent;display:flex;flex-direction:column;gap:8px}
-.related>.rc.in{margin-bottom:18px}
-.related>.node.head{align-self:flex-start;box-shadow:none;background:transparent;border-color:transparent;padding:6px 8px;font-size:15px}
-.related>.node.head:hover{background:var(--card);box-shadow:var(--shadow)}
-.related .node.rc{border-radius:14px;padding:10px 14px;text-align:left;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.rc small{font:500 12px var(--sans);color:var(--muted)}
-.rc.in small{color:var(--gold-ink)}
-.boundary-tag{position:absolute;right:14px;bottom:0;transform:translateY(50%);z-index:2;font:600 11.5px var(--sans);color:var(--gold-ink);
+#appA .gocc.cut{padding-bottom:0}
+#appA .related{position:relative;z-index:1;border:1.5px dashed var(--line);border-radius:18px;padding:8px 8px 10px;background:transparent;display:flex;flex-direction:column;gap:8px}
+#appA .related>.rc.in{margin-bottom:18px}
+#appA .related>.node.head{align-self:flex-start;box-shadow:none;background:transparent;border-color:transparent;padding:6px 8px;font-size:15px}
+#appA .related>.node.head:hover{background:var(--card);box-shadow:var(--shadow)}
+#appA .related .node.rc{border-radius:14px;padding:10px 14px;text-align:left;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+#appA .rc small{font:500 12px var(--sans);color:var(--muted)}
+#appA .rc.in small{color:var(--gold-ink)}
+#appA .boundary-tag{position:absolute;right:14px;bottom:0;transform:translateY(50%);z-index:2;font:600 11.5px var(--sans);color:var(--gold-ink);
   background:color-mix(in srgb,var(--gold) 8%,var(--card));padding:2px 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--gold) 70%,transparent);pointer-events:none;right:24px}
-
-/* office echoes */
+#appA /* office echoes */
 .echo{margin-top:6px;border-top:1px solid var(--line-soft);padding-top:14px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px}
-.echo p{margin:0;font-size:13px;color:var(--muted);flex:1 1 180px}
-.node.ghost{background:transparent;border:1.5px dashed var(--line);box-shadow:none;font-size:13.5px;padding:8px 14px;color:var(--muted)}
-.node.ghost:hover{background:var(--card);color:var(--ink)}
-.node.ghost.lit{color:var(--ink);background:var(--card)}
-
-footer{text-align:center;color:var(--faint);font-size:12.5px;padding:24px 24px 48px}
-
-@media (max-width:980px){.levels{grid-template-columns:1fr;gap:56px}}
+#appA .echo p{margin:0;font-size:13px;color:var(--muted);flex:1 1 180px}
+#appA .node.ghost{background:transparent;border:1.5px dashed var(--line);box-shadow:none;font-size:13.5px;padding:8px 14px;color:var(--muted)}
+#appA .node.ghost:hover{background:var(--card);color:var(--ink)}
+#appA .node.ghost.lit{color:var(--ink);background:var(--card)}
+#appA footer{text-align:center;color:var(--faint);font-size:12.5px;padding:24px 24px 48px}
+@media (max-width:980px){
+#appA .levels{grid-template-columns:1fr;gap:56px}
+}
 @media (max-width:720px){
-  .lanes{grid-template-columns:1fr;gap:44px}
-  .chain .node{min-width:180px}
-  .echo p{flex-basis:100%}
+#appA .lanes{grid-template-columns:1fr;gap:44px}
+#appA .chain .node{min-width:180px}
+#appA .echo p{flex-basis:100%}
 }
 @media (max-width:420px){
-  .chips{grid-template-columns:1fr}
-  .lane{padding:22px 12px 12px;border-radius:26px}
-  .realm{padding:12px 8px 60px;border-radius:32px}
-  .terr{padding:24px 8px 46px;border-radius:26px}
-  .terr>.node.tab{left:14px}
+#appA .chips{grid-template-columns:1fr}
+#appA .lane{padding:22px 12px 12px;border-radius:26px}
+#appA .realm{padding:12px 8px 60px;border-radius:32px}
+#appA .terr{padding:24px 8px 46px;border-radius:26px}
+#appA .terr>.node.tab{left:14px}
 }
-
-/* sheet */
+#appA /* sheet */
 dialog{border:0;padding:0;background:transparent;max-width:min(560px,calc(100vw - 32px));width:100%;overflow:visible;color:var(--ink)}
-dialog::backdrop{background:rgba(13,18,32,0);backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0);transition:all .4s var(--ease)}
-dialog.show::backdrop{background:rgba(13,18,32,.28);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2)}
-.sheet{position:relative;background:var(--card);border-radius:30px;padding:30px 30px 26px;box-shadow:0 30px 80px rgba(13,18,32,.28),0 0 0 1px var(--line-soft);
+#appA dialog::backdrop{background:rgba(13,18,32,0);backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0);transition:all .4s var(--ease)}
+#appA dialog.show::backdrop{background:rgba(13,18,32,.28);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2)}
+#appA .sheet{position:relative;background:var(--card);border-radius:30px;padding:30px 30px 26px;box-shadow:0 30px 80px rgba(13,18,32,.28),0 0 0 1px var(--line-soft);
   transform:scale(.6);opacity:0;transition:transform .55s var(--spring),opacity .3s var(--ease);max-height:85vh;overflow:auto}
-dialog.show .sheet{transform:none;opacity:1}
-.kind{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;color:var(--accent-ink,var(--accent))}
-.kind::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--accent)}
-.sheet h2{font-size:clamp(26px,5vw,34px);letter-spacing:-.03em;line-height:1.08;margin:10px 44px 14px 0;font-weight:700}
-.def{font-family:var(--serif);font-size:clamp(17.5px,2.4vw,20px);line-height:1.55;margin:0}
-.rel{margin-top:22px;padding-top:18px;border-top:1px solid var(--line-soft)}
-.rel h3{font-size:12.5px;font-weight:500;color:var(--muted);margin:0 0 10px}
-.rel .row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
-.rel .note{margin:0 0 14px;font-size:14.5px;line-height:1.5;color:var(--muted)}
-.rel button{font:500 13.5px var(--sans);color:var(--ink);background:var(--paper);border:1px solid var(--line-soft);border-radius:999px;padding:8px 14px;cursor:pointer;transition:transform .4s var(--spring),background .2s}
-.rel button:hover{transform:translateY(-1px);background:var(--card)}
-.rel button:focus-visible,.close:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-.close{position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:50%;border:0;background:var(--paper);color:var(--muted);cursor:pointer;display:grid;place-items:center;transition:transform .4s var(--spring)}
-.close:hover{transform:rotate(90deg)}
+#appA dialog.show .sheet{transform:none;opacity:1}
+#appA .kind{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;color:var(--accent-ink,var(--accent))}
+#appA .kind::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--accent)}
+#appA .sheet h2{font-size:clamp(26px,5vw,34px);letter-spacing:-.03em;line-height:1.08;margin:10px 44px 14px 0;font-weight:700}
+#appA .def{font-family:var(--serif);font-size:clamp(17.5px,2.4vw,20px);line-height:1.55;margin:0}
+#appA .rel{margin-top:22px;padding-top:18px;border-top:1px solid var(--line-soft)}
+#appA .rel h3{font-size:12.5px;font-weight:500;color:var(--muted);margin:0 0 10px}
+#appA .rel .row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+#appA .rel .note{margin:0 0 14px;font-size:14.5px;line-height:1.5;color:var(--muted)}
+#appA .rel button{font:500 13.5px var(--sans);color:var(--ink);background:var(--paper);border:1px solid var(--line-soft);border-radius:999px;padding:8px 14px;cursor:pointer;transition:transform .4s var(--spring),background .2s}
+#appA .rel button:hover{transform:translateY(-1px);background:var(--card)}
+#appA .rel button:focus-visible,#appA .close:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+#appA .close{position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:50%;border:0;background:var(--paper);color:var(--muted);cursor:pointer;display:grid;place-items:center;transition:transform .4s var(--spring)}
+#appA .close:hover{transform:rotate(90deg)}
 @media (max-width:600px){
-  dialog{max-width:100vw;margin:auto 0 0;width:100vw}
-  .sheet{border-radius:28px 28px 0 0;padding:14px 22px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(100%);opacity:1;transition:transform .5s var(--ease)}
-  .sheet::before{content:"";display:block;width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 18px}
-  .close{top:26px}
+#appA dialog{max-width:100vw;margin:auto 0 0;width:100vw}
+#appA .sheet{border-radius:28px 28px 0 0;padding:14px 22px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(100%);opacity:1;transition:transform .5s var(--ease)}
+#appA .sheet::before{content:"";display:block;width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 18px}
+#appA .close{top:26px}
+}
+#appA dialog{max-width:min(640px,calc(100vw - 32px))}
+#appA .mem{margin-top:24px;padding-top:20px;border-top:1px solid var(--line-soft)}
+#appA .mem-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+#appA .mem-head h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+#appA .quizbtn{font:600 13px var(--sans);border:0;border-radius:999px;padding:8px 14px;cursor:pointer;background:var(--accent-ink,var(--accent));color:#fff;transition:transform .4s var(--spring)}
+#appA .quizbtn:hover{transform:translateY(-1px)}
+#appA .quizbtn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+#appA .parts{display:grid;gap:12px}
+#appA .part{background:var(--paper);border-radius:16px;padding:12px 14px}
+#appA .plabel{font-size:12.5px;font-weight:600;color:var(--accent-ink,var(--accent));margin-bottom:6px}
+#appA .part ol{margin:0;padding-left:22px;display:grid;gap:4px}
+#appA .part li{font-size:15px;line-height:1.45}
+#appA .part li::marker{color:var(--faint);font-size:13px}
+#appA .acr{margin-top:16px}
+#appA .tiles{display:flex;flex-wrap:wrap;gap:8px}
+#appA .tile{flex:1 1 84px;max-width:150px;min-width:74px;border-radius:14px;padding:10px 8px 9px;text-align:center;
+  background:color-mix(in srgb,var(--accent) 10%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 28%,transparent)}
+#appA .tile b{display:block;font-size:24px;line-height:1.05;letter-spacing:-.02em;color:var(--accent-ink,var(--accent));font-weight:700}
+#appA .tile span{display:block;font-size:12px;line-height:1.3;color:var(--ink);margin-top:5px}
+#appA .say{margin:8px 2px 0;font-family:var(--serif);font-style:italic;font-size:16px;color:var(--muted)}
+#appA .cmp{margin-top:18px;border:1px solid var(--line-soft);border-radius:18px;padding:14px}
+#appA .cmp-t{font-size:15px;font-weight:700;margin-bottom:10px}
+#appA .cmp-g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+#appA .cmp-c{background:color-mix(in srgb,var(--accent) 9%,var(--card));border-radius:14px;padding:12px}
+#appA .cmp-c>b{display:block;font-size:22px;letter-spacing:-.02em;color:var(--accent-ink,var(--accent))}
+#appA .cmp-c>small{display:block;font-size:12px;color:var(--muted);line-height:1.35;margin:2px 0 8px}
+#appA .cmp dl{margin:0;display:grid;gap:2px}
+#appA .cmp dt{font-size:11.5px;color:var(--faint);margin-top:6px}
+#appA .cmp dd{margin:0;font-size:14px;line-height:1.4}
+#appA .cmp-n{margin:10px 2px 0;font-size:14.5px;line-height:1.5}
+#appA .cmp-n strong{font-weight:600;color:var(--accent-ink,var(--accent))}
+@media (max-width:380px){
+#appA .cmp-g{grid-template-columns:1fr}
+}
+#appA .hook{margin-top:18px;border-radius:16px;padding:12px 14px;background:color-mix(in srgb,var(--gold) 12%,var(--card));font-size:14.5px;line-height:1.5}
+#appA .hook span{display:block;font-size:12.5px;font-weight:600;color:var(--gold-ink);margin-bottom:3px}
+#appA .sheet.quiz .q{filter:blur(6px);cursor:pointer;user-select:none;-webkit-user-select:none;transition:filter .35s var(--ease)}
+#appA .sheet.quiz .q.shown{filter:none}
+@media (max-width:600px){
+#appA dialog{max-width:100vw}
+#appA .sheet{max-height:88vh}
+#appA .tile b{font-size:21px}
+}
+@media (prefers-color-scheme:dark){
+:root:not([data-theme="light"]) #appA .quizbtn{color:#0D1220}
+}
+:root[data-theme="dark"] #appA .quizbtn{color:#0D1220}
+@media (prefers-reduced-motion:reduce){
+*,#appA *::before,#appA *::after,#appA dialog::backdrop{transition-duration:.01ms!important;animation:none!important}
 }
 
-dialog{max-width:min(640px,calc(100vw - 32px))}
-.mem{margin-top:24px;padding-top:20px;border-top:1px solid var(--line-soft)}
-.mem-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.mem-head h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
-.quizbtn{font:600 13px var(--sans);border:0;border-radius:999px;padding:8px 14px;cursor:pointer;background:var(--accent-ink,var(--accent));color:#fff;transition:transform .4s var(--spring)}
-.quizbtn:hover{transform:translateY(-1px)}
-.quizbtn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
-.parts{display:grid;gap:12px}
-.part{background:var(--paper);border-radius:16px;padding:12px 14px}
-.plabel{font-size:12.5px;font-weight:600;color:var(--accent-ink,var(--accent));margin-bottom:6px}
-.part ol{margin:0;padding-left:22px;display:grid;gap:4px}
-.part li{font-size:15px;line-height:1.45}
-.part li::marker{color:var(--faint);font-size:13px}
-.acr{margin-top:16px}
-.tiles{display:flex;flex-wrap:wrap;gap:8px}
-.tile{flex:1 1 84px;max-width:150px;min-width:74px;border-radius:14px;padding:10px 8px 9px;text-align:center;
+:root{--violet:#5B3FC4;--glow-violet:rgba(91,63,196,.16)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--violet:#A993FF;--glow-violet:rgba(169,147,255,.22)}}
+:root[data-theme="dark"]{--violet:#A993FF;--glow-violet:rgba(169,147,255,.22)}
+
+#appB header{max-width:1180px;margin:0 auto;padding:clamp(40px,8vw,88px) 24px clamp(26px,4vw,40px);text-align:center}
+#appB .mark{width:52px;height:30px;margin:0 auto 22px;display:block}
+#appB h1{font-size:clamp(34px,6.2vw,64px);line-height:1.02;letter-spacing:-.035em;font-weight:700;margin:0}
+#appB .lede{font-size:clamp(16px,2vw,19px);color:var(--muted);margin:16px auto 0;max-width:36ch;line-height:1.45}
+#appB /* the big three */
+.three{max-width:1180px;margin:0 auto;padding:0 24px}
+#appB .scale{display:flex;justify-content:space-between;font-size:13px;color:var(--muted);margin:0 6px 10px}
+#appB .types{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+#appB .type{appearance:none;text-align:left;cursor:pointer;background:var(--card);border:2px solid color-mix(in srgb,var(--c) 70%,transparent);border-radius:26px;
+  padding:20px 20px 18px;color:var(--ink);box-shadow:0 4px 16px color-mix(in srgb,var(--c) 18%,transparent);
+  transition:transform .5s var(--spring),box-shadow .35s var(--ease),opacity .35s;display:flex;flex-direction:column;gap:10px;-webkit-tap-highlight-color:transparent}
+#appB .type:hover{transform:translateY(-3px);box-shadow:var(--shadow-up)}
+#appB .type:active{transform:scale(.98)}
+#appB .type:focus-visible{outline:3px solid var(--c);outline-offset:3px}
+#appB .type .top{display:flex;align-items:center;justify-content:space-between;gap:12px}
+#appB .type h2{margin:0;font-size:clamp(19px,2.2vw,23px);letter-spacing:-.02em;line-height:1.1;color:var(--ci,var(--c));font-weight:700}
+#appB .meter{display:flex;gap:4px;flex:none}
+#appB .meter i{width:8px;height:22px;border-radius:3px;background:color-mix(in srgb,var(--c) 18%,transparent)}
+#appB .meter i.on{background:var(--c)}
+#appB .type p{margin:0;font-size:15px;line-height:1.45;color:var(--muted)}
+#appB .type svg{display:block}
+#appB .t-sc{--c:var(--blue)}
+#appB .t-as{--c:var(--violet)}
+#appB .t-att{--c:var(--gold);--ci:var(--gold-ink)}
+#appB .fourth{display:flex;justify-content:center;margin-top:14px}
+#appB .ghostbtn{appearance:none;cursor:pointer;background:transparent;border:1.5px dashed var(--line);border-radius:999px;padding:9px 16px;font:600 13.5px var(--sans);color:var(--muted);transition:background .2s,color .2s}
+#appB .ghostbtn:hover{background:var(--card);color:var(--ink)}
+#appB /* map */
+.stage{max-width:1180px;margin:0 auto;padding:clamp(36px,6vw,64px) 24px 20px}
+#appB .stage-title{font-size:clamp(22px,3vw,30px);font-weight:700;letter-spacing:-.025em;margin:0 0 6px;text-align:center}
+#appB .stage-sub{margin:0 auto 34px;text-align:center;color:var(--muted);font-size:15px;max-width:48ch;line-height:1.45}
+#appB .map{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,auto) minmax(0,1fr);column-gap:150px;row-gap:66px;
+  grid-template-areas:". pres ." "gocc dept regul" "chart bureau ." ". office .";align-items:center;
+  background:color-mix(in srgb,var(--ink) 2.5%,transparent);border:1px solid var(--line-soft);border-radius:40px;padding:44px 34px}
+#appB svg.wires{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+#appB .w{fill:none;stroke-linecap:round;stroke-linejoin:round;transition:stroke .4s var(--ease),opacity .4s,stroke-width .4s}
+#appB .w.sc{stroke:var(--blue);stroke-width:3.2}
+#appB .w.as{stroke:var(--violet);stroke-width:2.6;stroke-dasharray:9 7}
+#appB .w.att{stroke:var(--gold);stroke-width:2.8;stroke-dasharray:1 8}
+#appB .map.focus .w:not(.lit){opacity:.18}
+#appB .map.focus .w.lit{stroke-width:4}
+#appB .a-pres{grid-area:pres}
+#appB .a-dept{grid-area:dept}
+#appB .a-bureau{grid-area:bureau}
+#appB .a-office{grid-area:office}
+#appB .a-gocc{grid-area:gocc}
+#appB .a-chart{grid-area:chart}
+#appB .a-regul{grid-area:regul}
+#appB .cen{justify-self:center}
+#appB .node{appearance:none;position:relative;z-index:2;cursor:pointer;font:700 17px/1.2 var(--sans);letter-spacing:-.01em;color:var(--ink);
+  background:var(--card);border:2px solid var(--line);border-radius:999px;padding:15px 28px;min-width:220px;text-align:center;
+  box-shadow:var(--shadow);transition:transform .5s var(--spring),box-shadow .35s var(--ease),opacity .35s,background .35s;-webkit-tap-highlight-color:transparent}
+#appB .node:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+#appB .node:active{transform:scale(.96);transition-duration:.15s}
+#appB .node:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+#appB .node.pres{background:var(--ink);color:var(--paper);border:0;font-size:19px;padding:18px 34px}
+#appB .node.dept{background:var(--blue);color:#fff;border:0;font-size:19px;padding:18px 34px}
+@media (prefers-color-scheme:dark){
+:root:not([data-theme="light"]) #appB .node.dept{color:#0D1220}
+}
+:root[data-theme="dark"] #appB .node.dept{color:#0D1220}
+#appB .node.sub{border-color:color-mix(in srgb,var(--blue) 70%,transparent);color:var(--blue);box-shadow:0 4px 14px color-mix(in srgb,var(--blue) 20%,transparent)}
+#appB .lat{position:relative;z-index:2;display:flex;flex-direction:column;gap:10px;align-items:stretch;max-width:300px;width:100%}
+#appB .a-gocc,#appB .a-chart{justify-self:end}
+#appB .a-regul{justify-self:start}
+#appB .node.side{border-radius:22px;text-align:left;padding:14px 18px;min-width:0;display:flex;flex-direction:column;gap:7px;border-color:color-mix(in srgb,var(--rc) 70%,transparent);
+  box-shadow:0 4px 14px color-mix(in srgb,var(--rc) 20%,transparent);transition:transform .5s var(--spring),box-shadow .35s,border-color .45s,opacity .35s}
+#appB .node.side .badge{align-self:flex-start;font:600 12px var(--sans);padding:4px 10px;border-radius:999px;color:var(--rci,var(--rc));background:color-mix(in srgb,var(--rc) 13%,var(--card));transition:all .45s var(--ease)}
+#appB .r-att{--rc:var(--gold);--rci:var(--gold-ink)}
+#appB .r-as{--rc:var(--violet);--rci:var(--violet)}
+#appB .map.focus .node:not(.lit){opacity:.38}
+#appB .map.focus .lat .node:not(.lit)~.toggle{opacity:.38}
+#appB .node.lit{box-shadow:0 0 0 5px var(--glow),var(--shadow-up)}
+#appB .toggle{display:flex;align-items:center;gap:10px;font:600 13.5px var(--sans);color:var(--muted);padding:2px 6px;cursor:pointer;user-select:none;-webkit-user-select:none;transition:opacity .35s}
+#appB .toggle input{position:absolute;opacity:0;pointer-events:none}
+#appB .track{position:relative;width:44px;height:26px;border-radius:13px;background:var(--line);transition:background .3s var(--ease);flex:none}
+#appB .track::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:transform .45s var(--spring)}
+#appB .toggle input:checked+.track{background:var(--violet)}
+#appB .toggle input:checked+.track::after{transform:translateX(18px)}
+#appB .toggle input:focus-visible+.track{outline:3px solid var(--violet);outline-offset:2px}
+#appB .toggle small{display:block;font-weight:500;font-size:12px;color:var(--faint)}
+#appB .pill{position:absolute;z-index:3;transform:translate(-50%,-50%);appearance:none;cursor:pointer;white-space:nowrap;
+  font:700 12.5px var(--sans);padding:6px 12px;border-radius:999px;border:1.5px solid var(--pc);background:var(--card);color:var(--pci,var(--pc));
+  box-shadow:var(--shadow);transition:transform .45s var(--spring),opacity .35s,box-shadow .3s}
+#appB .pill:hover{transform:translate(-50%,-50%) scale(1.06);box-shadow:var(--shadow-up)}
+#appB .pill:focus-visible{outline:3px solid var(--pc);outline-offset:2px}
+#appB .pill.sc{--pc:var(--blue)}
+#appB .pill.as{--pc:var(--violet)}
+#appB .pill.att{--pc:var(--gold);--pci:var(--gold-ink)}
+#appB .map.focus .pill:not(.lit){opacity:.3}
+#appB .pill.pop{animation:pop .6s var(--spring)}
+@keyframes pop{0%{transform:translate(-50%,-50%) scale(.6)}100%{transform:translate(-50%,-50%) scale(1)}}
+#appB /* cases */
+.cases{max-width:1180px;margin:0 auto;padding:clamp(30px,5vw,50px) 24px 70px}
+#appB .cases h2{font-size:clamp(22px,3vw,30px);font-weight:700;letter-spacing:-.025em;margin:0 0 18px;text-align:center}
+#appB .case-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+#appB .case{appearance:none;text-align:left;cursor:pointer;background:var(--card);border:1px solid var(--line-soft);border-left:0;border-radius:22px;padding:18px 20px;color:var(--ink);
+  box-shadow:var(--shadow);transition:transform .5s var(--spring),box-shadow .35s;position:relative;overflow:hidden}
+#appB .case::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--c)}
+#appB .case:hover{transform:translateY(-3px);box-shadow:var(--shadow-up)}
+#appB .case b{display:block;font-family:var(--serif);font-style:italic;font-weight:500;font-size:20px;letter-spacing:-.01em}
+#appB .case span{display:block;margin-top:6px;font-size:14.5px;line-height:1.45;color:var(--muted)}
+#appB .case em{display:inline-block;margin-top:10px;font-style:normal;font:600 12px var(--sans);color:var(--ci,var(--c))}
+#appB footer{text-align:center;color:var(--faint);font-size:12.5px;padding:0 24px 48px}
+@media (max-width:980px){
+#appB .types,#appB .case-grid{grid-template-columns:1fr}
+#appB .type{padding:18px}
+#appB .scale{display:none}
+}
+@media (max-width:860px){
+#appB .map{grid-template-columns:1fr;grid-template-areas:"pres" "dept" "bureau" "office" "gocc" "chart" "regul";row-gap:58px;padding:34px 16px}
+#appB .a-gocc,#appB .a-chart,#appB .a-regul{justify-self:center;max-width:420px}
+#appB .a-gocc{margin-top:26px}
+#appB .map::after{content:"Linked to the department from the side";grid-row:5;grid-column:1;align-self:start;justify-self:center;margin-top:-34px;font-size:13px;color:var(--muted)}
+}
+@media (max-width:420px){
+#appB .node{min-width:200px}
+#appB .map{border-radius:30px}
+}
+#appB /* sheet */
+dialog{border:0;padding:0;background:transparent;max-width:min(640px,calc(100vw - 32px));width:100%;overflow:visible;color:var(--ink)}
+#appB dialog::backdrop{background:rgba(13,18,32,0);backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0);transition:all .4s var(--ease)}
+#appB dialog.show::backdrop{background:rgba(13,18,32,.28);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2)}
+#appB .sheet{position:relative;background:var(--card);border-radius:30px;padding:30px 30px 26px;box-shadow:0 30px 80px rgba(13,18,32,.28),0 0 0 1px var(--line-soft);
+  transform:scale(.6);opacity:0;transition:transform .55s var(--spring),opacity .3s var(--ease);max-height:85vh;overflow:auto}
+#appB dialog.show .sheet{transform:none;opacity:1}
+#appB .kind{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;color:var(--accent-ink,var(--accent))}
+#appB .kind::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--accent)}
+#appB .sheet h2{font-size:clamp(26px,5vw,34px);letter-spacing:-.03em;line-height:1.08;margin:10px 44px 14px 0;font-weight:700}
+#appB .def{font-family:var(--serif);font-size:clamp(17.5px,2.4vw,20px);line-height:1.55;margin:0}
+#appB .info{margin-top:20px;display:grid;gap:12px}
+#appB .rel{margin-top:22px;padding-top:18px;border-top:1px solid var(--line-soft)}
+#appB .rel h3{font-size:12.5px;font-weight:500;color:var(--muted);margin:0 0 10px}
+#appB .rel .row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+#appB .rel button{font:500 13.5px var(--sans);color:var(--ink);background:var(--paper);border:1px solid var(--line-soft);border-radius:999px;padding:8px 14px;cursor:pointer;transition:transform .4s var(--spring),background .2s}
+#appB .rel button:hover{transform:translateY(-1px);background:var(--card)}
+#appB .close{position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:50%;border:0;background:var(--paper);color:var(--muted);cursor:pointer;display:grid;place-items:center;transition:transform .4s var(--spring)}
+#appB .close:hover{transform:rotate(90deg)}
+#appB .close:focus-visible,#appB .rel button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+#appB .mem{margin-top:24px;padding-top:20px;border-top:1px solid var(--line-soft)}
+#appB .mem-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+#appB .mem-head h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
+#appB .quizbtn{font:600 13px var(--sans);border:0;border-radius:999px;padding:8px 14px;cursor:pointer;background:var(--accent-ink,var(--accent));color:#fff;transition:transform .4s var(--spring)}
+#appB .quizbtn:hover{transform:translateY(-1px)}
+@media (prefers-color-scheme:dark){
+:root:not([data-theme="light"]) #appB .quizbtn{color:#0D1220}
+}
+:root[data-theme="dark"] #appB .quizbtn{color:#0D1220}
+#appB .parts{display:grid;gap:12px}
+#appB .part{background:var(--paper);border-radius:16px;padding:12px 14px}
+#appB .plabel{font-size:12.5px;font-weight:600;color:var(--accent-ink,var(--accent));margin-bottom:6px}
+#appB .part.no .plabel{color:var(--red)}
+#appB .part ol{margin:0;padding-left:22px;display:grid;gap:4px}
+#appB .part li{font-size:15px;line-height:1.45}
+#appB .part li::marker{color:var(--faint);font-size:13px}
+#appB .acr{margin-top:16px}
+#appB .tiles{display:flex;flex-wrap:wrap;gap:8px}
+#appB .tile{flex:1 1 84px;max-width:150px;min-width:74px;border-radius:14px;padding:10px 8px 9px;text-align:center;
   background:color-mix(in srgb,var(--accent) 10%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 28%,transparent)}
-.tile b{display:block;font-size:24px;line-height:1.05;letter-spacing:-.02em;color:var(--accent-ink,var(--accent));font-weight:700}
-.tile span{display:block;font-size:12px;line-height:1.3;color:var(--ink);margin-top:5px}
-.say{margin:8px 2px 0;font-family:var(--serif);font-style:italic;font-size:16px;color:var(--muted)}
-.cmp{margin-top:18px;border:1px solid var(--line-soft);border-radius:18px;padding:14px}
-.cmp-t{font-size:15px;font-weight:700;margin-bottom:10px}
-.cmp-g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.cmp-c{background:color-mix(in srgb,var(--accent) 9%,var(--card));border-radius:14px;padding:12px}
-.cmp-c>b{display:block;font-size:22px;letter-spacing:-.02em;color:var(--accent-ink,var(--accent))}
-.cmp-c>small{display:block;font-size:12px;color:var(--muted);line-height:1.35;margin:2px 0 8px}
-.cmp dl{margin:0;display:grid;gap:2px}
-.cmp dt{font-size:11.5px;color:var(--faint);margin-top:6px}
-.cmp dd{margin:0;font-size:14px;line-height:1.4}
-.cmp-n{margin:10px 2px 0;font-size:14.5px;line-height:1.5}
-.cmp-n strong{font-weight:600;color:var(--accent-ink,var(--accent))}
-@media (max-width:380px){.cmp-g{grid-template-columns:1fr}}
-.hook{margin-top:18px;border-radius:16px;padding:12px 14px;background:color-mix(in srgb,var(--gold) 12%,var(--card));font-size:14.5px;line-height:1.5}
-.hook span{display:block;font-size:12.5px;font-weight:600;color:var(--gold-ink);margin-bottom:3px}
-.sheet.quiz .q{filter:blur(6px);cursor:pointer;user-select:none;-webkit-user-select:none;transition:filter .35s var(--ease)}
-.sheet.quiz .q.shown{filter:none}
-@media (max-width:600px){dialog{max-width:100vw}.sheet{max-height:88vh}.tile b{font-size:21px}}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .quizbtn{color:#0D1220}}
-:root[data-theme="dark"] .quizbtn{color:#0D1220}
-@media (prefers-reduced-motion:reduce){*,*::before,*::after,dialog::backdrop{transition-duration:.01ms!important;animation:none!important}}
+#appB .tile b{display:block;font-size:24px;line-height:1.05;letter-spacing:-.02em;color:var(--accent-ink,var(--accent));font-weight:700}
+#appB .tile span{display:block;font-size:12px;line-height:1.3;margin-top:5px}
+#appB .say{margin:8px 2px 0;font-family:var(--serif);font-style:italic;font-size:16px;color:var(--muted)}
+#appB .hook{margin-top:18px;border-radius:16px;padding:12px 14px;background:color-mix(in srgb,var(--gold) 12%,var(--card));font-size:14.5px;line-height:1.5}
+#appB .hook span{display:block;font-size:12.5px;font-weight:600;color:var(--gold-ink);margin-bottom:3px}
+#appB .sheet.quiz .q{filter:blur(6px);cursor:pointer;user-select:none;-webkit-user-select:none;transition:filter .35s var(--ease)}
+#appB .sheet.quiz .q.shown{filter:none}
+@media (max-width:600px){
+#appB dialog{max-width:100vw;margin:auto 0 0;width:100vw}
+#appB .sheet{border-radius:28px 28px 0 0;padding:14px 22px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(100%);opacity:1;transition:transform .5s var(--ease);max-height:88vh}
+#appB .sheet::before{content:"";display:block;width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 18px}
+#appB .close{top:26px}
+#appB .tile b{font-size:21px}
+}
+@media (prefers-reduced-motion:reduce){
+*,#appB *::before,#appB *::after,#appB dialog::backdrop{transition-duration:.01ms!important;animation:none!important}
+}
+
+
+.topnav{position:sticky;top:0;z-index:60;padding:calc(env(safe-area-inset-top,0px) + 10px) 16px 10px;
+  background:color-mix(in srgb,var(--paper) 80%,transparent);backdrop-filter:blur(20px) saturate(1.7);-webkit-backdrop-filter:blur(20px) saturate(1.7);
+  border-bottom:1px solid var(--line-soft)}
+.topnav-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:10px;font:700 16px var(--sans);letter-spacing:-.01em;white-space:nowrap}
+.brand small{display:block;font-weight:500;font-size:12.5px;color:var(--muted)}
+.brand svg{flex:none}
+.switch{position:relative;display:flex;padding:5px;border-radius:20px;background:color-mix(in srgb,var(--ink) 7%,transparent);flex:0 1 560px}
+.switch button{position:relative;z-index:1;flex:1 1 0;appearance:none;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;gap:12px;text-align:left;
+  font:inherit;color:var(--muted);padding:10px 16px;border-radius:15px;transition:color .3s;-webkit-tap-highlight-color:transparent;min-width:0}
+.switch .num{flex:none;width:28px;height:28px;border-radius:9px;display:grid;place-items:center;font:700 14px var(--sans);
+  background:color-mix(in srgb,var(--ink) 10%,transparent);color:var(--ink);transition:background .3s,color .3s}
+.switch b{display:block;font:700 16px var(--sans);letter-spacing:-.015em;color:var(--ink);transition:color .3s}
+.switch small{display:block;font:500 12.5px var(--sans);color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .3s}
+.switch button[aria-selected="true"] b{color:var(--paper)}
+.switch button[aria-selected="true"] small{color:color-mix(in srgb,var(--paper) 75%,transparent)}
+.switch button[aria-selected="true"] .num{background:var(--gold);color:#1B2233}
+.switch button:not([aria-selected="true"]):hover{background:color-mix(in srgb,var(--ink) 5%,transparent)}
+.switch button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.sw-thumb{position:absolute;top:5px;bottom:5px;left:0;border-radius:15px;background:var(--ink);box-shadow:0 4px 14px rgba(13,18,32,.22);
+  transition:transform .55s cubic-bezier(.2,.9,.25,1.15),width .55s cubic-bezier(.2,.9,.25,1.15)}
+#appA .lensbar{top:calc(env(safe-area-inset-top,0px) + var(--nav-h,78px) + 10px)}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + var(--nav-h,78px))}
+.app{animation:appIn .55s cubic-bezier(.22,.8,.2,1)}
+@keyframes appIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.app.leaving{opacity:0;transform:translateY(-8px);transition:opacity .22s ease,transform .22s ease}
+@media (max-width:760px){.brand{display:none}.switch{flex:1 1 0;min-width:0;width:100%}}
+@media (max-width:440px){.topnav{padding-left:10px;padding-right:10px}.switch button{padding:9px 10px;gap:9px}.switch .num{width:24px;height:24px;font-size:13px;border-radius:8px}.switch b{font-size:15px}.switch small{font-size:11.5px}}
+@media (prefers-reduced-motion:reduce){.app{animation:none}.sw-thumb{transition:none}}
+
 </style>
 </head>
 <body>
+<div class="topnav" id="topnav">
+ <div class="topnav-in">
+  <div class="brand"><svg width="30" height="30" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="7" fill="var(--gold)"/><g stroke="var(--gold)" stroke-width="2.6" stroke-linecap="round"><path d="M22 3v7M22 34v7M3 22h7M34 22h7M8.6 8.6l5 5M30.4 30.4l5 5M8.6 35.4l5-5M30.4 13.6l5-5"/></g></svg><span>Admin Law<small>Two diagrams</small></span></div>
+  <nav class="switch" id="switch" role="tablist" aria-label="Choose a diagram">
+   <span class="sw-thumb" id="swThumb"></span>
+   <button role="tab" id="tabA" aria-controls="appA" aria-selected="true" data-app="appA"><span class="num">1</span><span style="min-width:0"><b>Structure</b><small>How it is organized</small></span></button>
+   <button role="tab" id="tabB" aria-controls="appB" aria-selected="false" data-app="appB"><span class="num">2</span><span style="min-width:0"><b>Relationships</b><small>Who answers to whom</small></span></button>
+  </nav>
+ </div>
+</div>
+<div class="app" id="appA" role="tabpanel" aria-labelledby="tabA">
+
 
 <header>
   <svg class="mark" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="7" fill="currentColor"/><g stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M22 3v7M22 34v7M3 22h7M34 22h7M8.6 8.6l5 5M30.4 30.4l5 5M8.6 35.4l5-5M30.4 13.6l5-5"/></g></svg>
@@ -398,7 +627,89 @@ dialog{max-width:min(640px,calc(100vw - 32px))}
   </div>
 </dialog>
 
+
+</div>
+<div class="app" id="appB" role="tabpanel" aria-labelledby="tabB" hidden>
+
+
+<header>
+  <svg class="mark" viewBox="0 0 52 30" aria-hidden="true"><circle cx="11" cy="15" r="8" fill="none" stroke="var(--blue)" stroke-width="3"/><circle cx="26" cy="15" r="8" fill="none" stroke="var(--violet)" stroke-width="3" stroke-dasharray="5 3.5"/><circle cx="41" cy="15" r="8" fill="none" stroke="var(--gold)" stroke-width="3" stroke-dasharray="1 4.5" stroke-linecap="round"/></svg>
+  <h1>Who answers<br>to whom</h1>
+  <p class="lede">The three administrative relationships, and how they bind each agency. Tap anything to read it.</p>
+</header>
+
+<section class="three" aria-label="The three relationships">
+  <div class="scale" aria-hidden="true"><span>Tightest grip</span><span>Loosest grip</span></div>
+  <div class="types">
+    <button class="type t-sc" data-id="sc">
+      <div class="top"><h2>Supervision and control</h2><span class="meter" aria-hidden="true"><i class="on"></i><i class="on"></i><i class="on"></i></span></div>
+      <svg width="100%" height="8" aria-hidden="true"><line x1="2" y1="4" x2="100%" y2="4" stroke="var(--blue)" stroke-width="3.2" stroke-linecap="round"/></svg>
+      <p>The superior can act, direct, restrain, review and overrule.</p>
+    </button>
+    <button class="type t-as" data-id="as">
+      <div class="top"><h2>Administrative supervision</h2><span class="meter" aria-hidden="true"><i class="on"></i><i class="on"></i><i></i></span></div>
+      <svg width="100%" height="8" aria-hidden="true"><line x1="2" y1="4" x2="100%" y2="4" stroke="var(--violet)" stroke-width="2.6" stroke-dasharray="9 7" stroke-linecap="round"/></svg>
+      <p>Eyes on, hands off: oversee, audit, correct, check budgets.</p>
+    </button>
+    <button class="type t-att" data-id="att">
+      <div class="top"><h2>Attachment</h2><span class="meter" aria-hidden="true"><i class="on"></i><i></i><i></i></span></div>
+      <svg width="100%" height="8" aria-hidden="true"><line x1="2" y1="4" x2="100%" y2="4" stroke="var(--gold)" stroke-width="2.8" stroke-dasharray="1 8" stroke-linecap="round"/></svg>
+      <p>Side by side, for policy and program coordination only.</p>
+    </button>
+  </div>
+  <div class="fourth"><button class="ghostbtn" data-id="fourth">Is there a fourth? The professor's view</button></div>
+</section>
+
+<section class="stage">
+  <h2 class="stage-title">How each agency is bound</h2>
+  <p class="stage-sub">Line style shows the relationship. Tap a label on a line to see why, and try the operating-deficit switch.</p>
+  <div class="map" id="map">
+    <svg class="wires" id="b_wires" aria-hidden="true"></svg>
+    <button class="node pres a-pres cen" data-id="president">The President</button>
+    <button class="node dept a-dept cen" data-id="dept">Department</button>
+    <button class="node sub a-bureau cen" data-id="bureau">Bureau</button>
+    <button class="node sub a-office cen" data-id="office">Office</button>
+    <div class="lat a-gocc">
+      <button class="node side r-att" data-id="gocc" id="goccNode">GOCC<span class="badge" id="goccBadge">Attached</span></button>
+      <label class="toggle"><input type="checkbox" id="deficit"><span class="track"></span><span>Operating deficit<small id="defNote">Off: stays attached</small></span></label>
+    </div>
+    <div class="lat a-chart">
+      <button class="node side r-att" data-id="chartered">Chartered institution<span class="badge">Attached</span></button>
+    </div>
+    <div class="lat a-regul">
+      <button class="node side r-as" data-id="regul">Regulatory agency<span class="badge">Administrative supervision</span></button>
+    </div>
+  </div>
+</section>
+
+<section class="cases">
+  <h2>The cases that shape them</h2>
+  <div class="case-grid">
+    <button class="case" data-id="aratuc" style="--c:var(--blue)"><b>Aratuc v. COMELEC</b><span>A superior with control may do directly what the subordinate should have done.</span><em>Supervision and control</em></button>
+    <button class="case" data-id="beja" style="--c:var(--gold);--ci:var(--gold-ink)"><b>Beja, Sr. v. Court of Appeals</b><span>A department cannot discipline the personnel of an attached agency.</span><em>Attachment</em></button>
+    <button class="case" data-id="eugenio" style="--c:var(--gold);--ci:var(--gold-ink)"><b>Eugenio v. CSC</b><span>An agency created by law cannot be abolished by the body it is attached to.</span><em>Attachment</em></button>
+  </div>
+</section>
+
+<footer>A study companion. Always read the codal provisions and the original cases.</footer>
+
+<dialog id="b_dlg" aria-labelledby="b_dlgTitle">
+  <div class="sheet" id="b_sheet">
+    <button class="close" id="b_close" aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <div class="kind" id="b_dlgKind"></div>
+    <h2 id="b_dlgTitle"></h2>
+    <p class="def" id="b_dlgDef"></p>
+    <div class="info" id="b_dlgInfo"></div>
+    <div id="b_dlgMem"></div>
+    <div class="rel" id="b_dlgRel"></div>
+  </div>
+</dialog>
+
+
+</div>
 <script>
+(function(){
+
 const T=(k,w)=>[k,w];
 const D = {
   republic:{name:"Government of the Republic of the Philippines",kind:"Level of government",tone:"ink",
@@ -703,6 +1014,7 @@ function shut(){
   reduce?done():setTimeout(done,380);
 }
 document.addEventListener('click',e=>{
+  if(!e.target.closest('#appA'))return;
   if(e.target.closest('#quizBtn')){const on=sheet.classList.toggle('quiz');sheet.querySelectorAll('.q.shown').forEach(q=>q.classList.remove('shown'));const b=document.getElementById('quizBtn');b.textContent=on?'Show all':'Quiz me';b.setAttribute('aria-pressed',on);return}
   const qq=e.target.closest('.sheet.quiz .q');if(qq){qq.classList.toggle('shown');return}
   const lg=e.target.closest('[data-lensgo]');if(lg){setLens(lg.dataset.lensgo);shut();return}
@@ -716,6 +1028,290 @@ let sy=null;
 sheet.addEventListener('touchstart',e=>{sy=sheet.scrollTop>0?null:e.touches[0].clientY},{passive:true});
 sheet.addEventListener('touchmove',e=>{if(sy===null||innerWidth>600)return;const dy=e.touches[0].clientY-sy;if(dy>0){sheet.style.transition='none';sheet.style.transform=`translateY(${dy}px)`}},{passive:true});
 sheet.addEventListener('touchend',e=>{if(sy===null)return;const dy=e.changedTouches[0].clientY-sy;sy=null;sheet.style.transition='';sheet.style.transform='';if(dy>90&&innerWidth<=600)shut()});
+
+})();
+(function(){
+
+const T=(k,w)=>[k,w];
+const D={
+  sc:{name:"Supervision and control",kind:"Relationship 1 of 3: the tightest",tone:"blue",
+    def:"Supervision and control shall include authority to act directly whenever a specific function is entrusted by law or regulation to a subordinate; direct the performance of duty; restrain the commission of acts; review, approve, reverse or modify acts and decisions of subordinate officials or units; determine priorities in the execution of plans and programs; and prescribe standards, guidelines, plans and programs. Unless a different meaning is explicitly provided in the specific law governing the relationship of particular agencies, the word “control” shall encompass supervision and control as defined in this paragraph.",
+    bd:{parts:[
+      ["Six powers",["Act directly whenever a specific function is entrusted by law or regulation to a subordinate","Direct the performance of duty","Restrain the commission of acts","Review, approve, reverse or modify acts and decisions of subordinate officials or units","Determine priorities in the execution of plans and programs","Prescribe standards, guidelines, plans and programs"]],
+      ["The word “control”",["Encompasses supervision and control as defined here","Unless the specific law governing the agencies explicitly says otherwise"]],
+      ["Does not apply to",["Chartered institutions attached to a department"],1]],
+     acr:[{tiles:[T("A","Act directly"),T("D","Direct performance"),T("R","Restrain acts"),T("R","Review and overrule"),T("D","Determine priorities"),T("P","Prescribe standards")],say:"“A Doctor Rarely Reviews Daily Plans.”"},
+          {tiles:[T("R","Review"),T("A","Approve"),T("R","Reverse"),T("M","Modify")],say:"The fourth power has four verbs: “RARM”."},
+          {tiles:[T("S","Standards"),T("G","Guidelines"),T("P","Plans"),T("P","Programs")],say:"What the superior prescribes: “Some Good People Pray.”"}],
+     tip:"Control is the full package. The superior can step into the subordinate's shoes and do the job itself (Aratuc)."},
+    links:["pres>dept","dept>bureau","bureau>office","aratuc"]},
+  as:{name:"Administrative supervision",kind:"Relationship 2 of 3: oversight, not control",tone:"violet",
+    def:"Administrative supervision which shall govern the administrative relationship between a department or its equivalent and regulatory agencies or other agencies as may be provided by law, shall be limited to the authority of the department or its equivalent to generally oversee the operations of such agencies and to insure that they are managed effectively, efficiently and economically but without interference with day-to-day activities; or require the submission of reports and cause the conduct of management audit, performance evaluation and inspection to determine compliance with policies, standards and guidelines of the department; to take such action as may be necessary for the proper performance of official functions, including rectification of violations, abuses and other forms of maladministration; and to review and pass upon budget proposals of such agencies but may not increase or add to them. Such authority shall not, however, extend to: (1) appointments and other personnel actions in accordance with the decentralization of personnel functions under the Code, except appeal is made from an action of the appointing authority, in which case the appeal shall be initially sent to the department or its equivalent, subject to appeal in accordance with law; (2) contracts entered into by the agency in the pursuit of its objectives, the review of which and other procedures related thereto shall be governed by appropriate laws, rules and regulations; and (3) the power to review, reverse, revise, or modify the decisions of regulatory agencies in the exercise of their regulatory or quasi-judicial functions. Unless a different meaning is explicitly provided in the specific law governing the relationship of particular agencies, the word “supervision” shall encompass administrative supervision as defined in this paragraph.",
+    bd:{parts:[
+      ["Governs the relationship between",["A department or its equivalent","And regulatory agencies, or other agencies as may be provided by law"]],
+      ["Limited to",["Generally oversee operations and ensure they are managed effectively, efficiently and economically, without interference with day-to-day activities","Require reports, and cause management audits, performance evaluations and inspections to check compliance with the department's policies, standards and guidelines","Take action for the proper performance of official functions, including rectifying violations, abuses and other maladministration","Review and pass upon budget proposals, but may not increase or add to them"]],
+      ["Does not extend to",["Appointments and other personnel actions (but an appeal from the appointing authority goes first to the department)","Contracts entered into by the agency","Reviewing, reversing, revising or modifying the decisions of regulatory agencies in their regulatory or quasi-judicial functions"],1],
+      ["The word “supervision”",["Encompasses administrative supervision as defined here","Unless the specific law explicitly says otherwise"]]],
+     acr:[{tiles:[T("O","Oversee operations"),T("R","Reports and audits"),T("A","Action to rectify"),T("B","Budget review")],say:"What it can do: “ORAB”."},
+          {tiles:[T("E","Effectively"),T("E","Efficiently"),T("E","Economically")],say:"The 3 Es of how agencies must be managed."},
+          {tiles:[T("P","Personnel"),T("C","Contracts"),T("D","Decisions (quasi-judicial)")],say:"What it can't touch: “Please Can't Decide”."}],
+     tip:"Eyes on, hands off. The department watches and corrects, but it cannot hire, contract, or overrule the agency's quasi-judicial decisions. On budgets it can cut, never add."},
+    links:["dept>regul","dept>gocc"]},
+  att:{name:"Attachment",kind:"Relationship 3 of 3: the loosest",tone:"gold",
+    def:"This refers to the lateral relationship between the department or its equivalent and the attached agency or corporation for purposes of policy and program coordination. The coordination may be accomplished by having the department represented in the governing board of the attached agency or corporation, either as chairman or as a member, with or without voting rights, if this is permitted by the charter; having the attached corporation or agency comply with a system of periodic reporting which shall reflect the progress of programs and projects; and having the department or its equivalent provide general policies through its representative in the board, which shall serve as the framework for the internal policies of the attached corporation or agency. Matters of day-to-day administration or all those pertaining to internal operations shall be left to the discretion or judgment of the executive officer of the agency or corporation. In the event that the Secretary and the head of the board or the attached agency or corporation strongly disagree on the interpretation and application of policies, and the Secretary is unable to resolve the disagreement, he shall bring the matter to the President for resolution and direction. Government-owned or controlled corporations attached to a department shall submit to the Secretary concerned their audited financial statements within sixty (60) days after the close of the fiscal year; and pending submission of the required financial statements, the corporation shall continue to operate on the basis of the preceding year's budget until the financial statements shall have been submitted. Should any government-owned or controlled corporation incur an operation deficit at the close of its fiscal year, it shall be subject to administrative supervision of the department; and the corporation's operating and capital budget shall be subject to the department's examination, review, modification and approval.",
+    bd:{parts:[
+      ["What it is",["A lateral relationship between the department and the attached agency or corporation","For purposes of policy and program coordination"]],
+      ["Coordination is done by",["Representation on the governing board, as chairman or member, with or without voting rights, if the charter permits","A system of periodic reporting on the progress of programs and projects","General policies, given through the board representative, as the framework for internal policies"]],
+      ["Left to the agency",["Day-to-day administration and internal operations","Decided by the agency's executive officer"]],
+      ["If they strongly disagree on policy",["And the Secretary cannot resolve it","The Secretary brings it to the President"]],
+      ["Attached GOCCs",["Submit audited financial statements to the Secretary within 60 days after the fiscal year closes","Until then, operate on the preceding year's budget","An operating deficit places them under administrative supervision, with operating and capital budgets subject to the department's examination, review, modification and approval"]],
+      ["Also does not extend to",["Personnel actions","Contracts entered into by the agency","Reviewing or modifying the attached agency's decisions"],1]],
+     acr:[{tiles:[T("R","Representation on the board"),T("P","Periodic reporting"),T("G","General policies")],say:"“RPG”: the department's only three tools."},
+          {tiles:[T("60","days for audited financial statements")],say:"Miss it, and the GOCC runs on last year's budget."},
+          {tiles:[T("D","Deficit"),T("AS","→ administrative supervision")],say:"The one time attachment tightens."}],
+     tip:"Side by side, not above. The department gets a seat, a report and a say on policy, and nothing more, unless the GOCC runs an operating deficit."},
+    links:["dept>gocc","dept>chartered","beja","eugenio"]},
+  fourth:{name:"Representative coordination and convergence",kind:"The professor's view, not in the Code",tone:"ink",
+    def:"The deck suggests there is actually a fourth relationship: a department may be represented in another body purely for convergence purposes, not for control, supervision or attachment.",
+    links:["sc","as","att"]},
+
+  president:{name:"The President",kind:"Chief Executive",tone:"ink",
+    def:"The President shall have control of all the executive departments, bureaus, and offices. He shall ensure that the laws be faithfully executed.",
+    info:[["Relationship",["Control over every executive department, bureau and office","“Control” carries the full supervision-and-control package unless a law says otherwise"]]],
+    links:["pres>dept","sc"]},
+  dept:{name:"Department",kind:"The hub of all three",tone:"blue",
+    def:"The department sits at the center. It is under the President's control, and it relates to every other agency here through one of the three relationships.",
+    info:[["Downward: supervision and control",["Over its own subordinate officials and units, such as bureaus and offices"]],["To the right: administrative supervision",["Over regulatory agencies placed under it"]],["To the left: attachment",["With the GOCCs and chartered institutions attached to it"]]],
+    links:["pres>dept","dept>bureau","dept>regul","dept>gocc","dept>chartered"]},
+  bureau:{name:"Bureau",kind:"Subordinate unit",tone:"blue",
+    def:"A principal subdivision of the department, and so a subordinate unit under the department's supervision and control.",
+    links:["dept>bureau","bureau>office","sc"]},
+  office:{name:"Office",kind:"Subordinate unit",tone:"blue",
+    def:"A major functional unit of a department or bureau, and so a subordinate unit under supervision and control.",
+    links:["bureau>office","sc"]},
+  regul:{name:"Regulatory agency",kind:"Under administrative supervision",tone:"violet",
+    def:"A regulatory agency shall be subject to the administrative supervision of the department under which it is placed, except when it is a government corporation, in which case it is governed by the rules for attached GOCCs.",
+    info:[["Every year",["Its head submits its budget and work plan for the Secretary's approval","These become the basis of its day-to-day operations"]],["It may also",["Use the department's common auxiliary and management services, when convenient and economical"]],["The exception",["If the regulatory agency is a government corporation, it is attached instead, like a GOCC"]]],
+    links:["dept>regul","as"]},
+  gocc:{name:"GOCC",kind:"Attached to a department",tone:"gold",
+    def:"Government-owned or controlled corporations shall be attached to the appropriate department with which they have allied functions, for policy and program coordination and for general supervision.",
+    info:[["Board",["At least one-third of its board should be the Secretary, an Undersecretary or an Assistant Secretary","This protects the government's interests in the corporation"]],["Money",["Audited financial statements to the Secretary within 60 days after the fiscal year closes","Operates on last year's budget until it submits them","An operating deficit places it under administrative supervision"]]],
+    links:["dept>gocc","att","as"]},
+  chartered:{name:"Chartered institution",kind:"Attached to a department",tone:"gold",
+    def:"A chartered institution attached to a department relates to it by attachment. The Code's chapter on supervision and control does not apply to it.",
+    info:[["What that means",["The department coordinates policy and programs, but does not control it","The department has no jurisdiction over administrative or disciplinary cases of its personnel (Beja)"]]],
+    links:["dept>chartered","att","beja"]},
+
+  "pres>dept":{name:"President → Department",kind:"Control",tone:"blue",rel:"sc",
+    def:"The President has control of all executive departments, bureaus and offices. Unless a specific law gives it a different meaning, “control” means the full supervision-and-control package.",
+    links:["sc","president","dept"]},
+  "dept>bureau":{name:"Department → Bureau",kind:"Supervision and control",tone:"blue",rel:"sc",
+    def:"A bureau is a subordinate unit, so the department can act directly on its functions, direct and restrain it, review and overrule its acts and decisions, set its priorities, and prescribe its standards.",
+    links:["sc","dept","bureau"]},
+  "bureau>office":{name:"Bureau → Office",kind:"Supervision and control",tone:"blue",rel:"sc",
+    def:"An office is a subordinate unit of the department or bureau above it, so the same six supervision-and-control powers run down to it.",
+    links:["sc","bureau","office"]},
+  "dept>regul":{name:"Department → Regulatory agency",kind:"Administrative supervision",tone:"violet",rel:"as",
+    def:"The department oversees the regulatory agency and corrects maladministration, but does not run its day-to-day work, its personnel or its contracts, and cannot overrule its regulatory or quasi-judicial decisions.",
+    links:["as","dept","regul"]},
+  "dept>gocc":{name:"Department ↔ GOCC",kind:"Attachment",tone:"gold",rel:"att",
+    def:"A lateral link for policy and program coordination. The department sits on the board, receives periodic reports and sets general policy. Everything else is the GOCC's own business.",
+    links:["att","dept","gocc"]},
+  "dept>chartered":{name:"Department ↔ Chartered institution",kind:"Attachment",tone:"gold",rel:"att",
+    def:"A lateral link for policy and program coordination. The supervision-and-control chapter does not apply, and the department cannot discipline the institution's personnel.",
+    links:["att","dept","chartered","beja"]},
+
+  aratuc:{name:"Aratuc v. COMELEC",kind:"Case on supervision and control",tone:"blue",
+    def:"The election law gave the COMELEC direct control and supervision over boards of canvassers. The Court held that the COMELEC's power to review their actions did not come from any appellate jurisdiction, since no provision granted one, but from its plenary power of direct control and supervision.",
+    info:[["Doctrine",["A superior body or office with supervision and control over another may do directly what the subordinate is supposed to do, or ought to have done"]]],
+    links:["sc"]},
+  beja:{name:"Beja, Sr. v. Court of Appeals",kind:"Case on attachment",tone:"gold",
+    def:"An attached agency has more independence from its department than one under supervision and control or administrative supervision. Attachment is merely for policy and program coordination; even agencies under administrative supervision are free from departmental interference in personnel actions; and the supervision-and-control chapter does not apply to chartered institutions attached to a department.",
+    info:[["Doctrine",["A department has no jurisdiction over administrative or disciplinary cases involving the personnel of an agency attached to it"]]],
+    links:["att","dept>chartered"]},
+  eugenio:{name:"Eugenio v. Civil Service Commission",kind:"Case on attachment",tone:"gold",
+    def:"The Career Executive Service Board was created by law and attached to the Civil Service Commission for policy and program coordination. The CSC tried to abolish it.",
+    info:[["Doctrine",["An office created by law can only be abolished by the legislature","The body it is attached to has no such power, since creating and abolishing public offices is primarily a legislative function"]]],
+    links:["att"]}
+};
+
+const TONE={blue:['var(--blue)','var(--blue)','var(--glow-blue)'],violet:['var(--violet)','var(--violet)','var(--glow-violet)'],gold:['var(--gold)','var(--gold-ink)','var(--glow-gold)'],ink:['var(--ink)','var(--ink)','var(--glow-ink)']};
+const TYPE_NAME={sc:'Supervision and control',as:'Admin. supervision',att:'Attachment'};
+const EDGES=[
+  {id:"pres>dept",a:"president",b:"dept",r:"v",t:"sc",label:"Control"},
+  {id:"dept>bureau",a:"dept",b:"bureau",r:"v",t:"sc"},
+  {id:"bureau>office",a:"bureau",b:"office",r:"v",t:"sc"},
+  {id:"dept>regul",a:"dept",b:"regul",r:"right",t:"as"},
+  {id:"dept>gocc",a:"dept",b:"gocc",r:"left",t:"att",off:-10,mid:-18},
+  {id:"dept>chartered",a:"dept",b:"chartered",r:"left",t:"att",off:12,mid:18}
+];
+const map=document.getElementById('map'),svg=document.getElementById('b_wires');
+const el=id=>map.querySelector(`.node[data-id="${id}"]`);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let deficit=false,current=null,drawnOnce=false;
+
+function edgeType(e){return e.id==='dept>gocc'&&deficit?'as':e.t}
+function R(e,t){const r=e.getBoundingClientRect();return{l:r.left-t.left,r:r.right-t.left,t:r.top-t.top,b:r.bottom-t.top,cx:(r.left+r.right)/2-t.left,cy:(r.top+r.bottom)/2-t.top}}
+function hpath(x1,y1,xm,y2,x2){
+  if(Math.abs(y1-y2)<2)return`M${x1} ${y1}H${x2}`;
+  const r=Math.min(14,Math.abs(y2-y1)/2),sx=Math.sign(xm-x1),sy=Math.sign(y2-y1),sx2=Math.sign(x2-xm);
+  return`M${x1} ${y1}H${xm-sx*r}Q${xm} ${y1} ${xm} ${y1+sy*r}V${y2-sy*r}Q${xm} ${y2} ${xm+sx2*r} ${y2}H${x2}`;
+}
+function draw(){
+  const t=map.getBoundingClientRect();
+  svg.setAttribute('width',t.width);svg.setAttribute('height',t.height);svg.setAttribute('viewBox',`0 0 ${t.width} ${t.height}`);
+  map.querySelectorAll('.pill').forEach(p=>p.remove());
+  let h='';
+  for(const e of EDGES){
+    const A=R(el(e.a),t),B=R(el(e.b),t),ty=edgeType(e);let d,px,py;
+    if(e.r==='v'){d=`M${A.cx} ${A.b}V${B.t}`;px=A.cx;py=(A.b+B.t)/2}
+    else if(e.r==='right'){if(B.l<A.r+30)continue;const y1=A.cy,xm=(A.r+B.l)/2;d=hpath(A.r,y1,xm,B.cy,B.l-2);px=xm;py=B.cy}
+    else{if(B.r>A.l-30)continue;const y1=A.cy+(e.off||0),xm=(A.l+B.r)/2+(e.mid||0);d=hpath(A.l,y1,xm,B.cy,B.r+2);px=(B.r+xm)/2+ (e.mid<0?-4:0);py=B.cy;
+      px=Math.max(px,B.r+62);}
+    h+=`<path class="w ${ty}" data-e="${e.id}" d="${d}" ${ty==='sc'?'pathLength="1"':''}/>`;
+    const p=document.createElement('button');
+    p.className=`pill ${ty}`;p.dataset.id=e.id;p.dataset.e=e.id;p.textContent=e.label||TYPE_NAME[ty];
+    p.style.left=px+'px';p.style.top=py+'px';map.appendChild(p);
+  }
+  svg.innerHTML=h;
+  if(!drawnOnce&&!reduce){drawnOnce=true;
+    svg.querySelectorAll('path').forEach((p,i)=>{
+      if(p.getAttribute('pathLength')){p.style.strokeDasharray='1';p.style.strokeDashoffset='1';
+        p.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:800,delay:150+i*120,easing:'cubic-bezier(.22,.8,.2,1)',fill:'forwards'}).onfinish=()=>{p.style.strokeDasharray='';p.style.strokeDashoffset=''};}
+      else p.animate([{opacity:0},{opacity:1}],{duration:700,delay:600,fill:'backwards'});
+    });
+    map.querySelectorAll('.pill').forEach((p,i)=>p.animate([{opacity:0,transform:'translate(-50%,-50%) scale(.7)'},{opacity:1,transform:'translate(-50%,-50%) scale(1)'}],{duration:550,delay:750+i*60,easing:'cubic-bezier(.2,.9,.25,1.15)',fill:'backwards'}));
+  }
+  if(current)light(current);
+}
+new ResizeObserver(()=>requestAnimationFrame(draw)).observe(map);
+document.fonts&&document.fonts.ready.then(draw);
+
+/* deficit switch */
+const defBox=document.getElementById('deficit');
+defBox.addEventListener('change',()=>{
+  deficit=defBox.checked;
+  const n=document.getElementById('goccNode');
+  n.classList.toggle('r-att',!deficit);n.classList.toggle('r-as',deficit);
+  document.getElementById('goccBadge').textContent=deficit?'Administrative supervision':'Attached';
+  document.getElementById('defNote').textContent=deficit?'On: budgets now need department approval':'Off: stays attached';
+  draw();
+  const p=map.querySelector('.pill[data-e="dept>gocc"]');if(p&&!reduce){p.classList.add('pop')}
+});
+
+/* lighting */
+function edgesFor(id){
+  const n=D[id];if(!n)return[];
+  if(['sc','as','att'].includes(id))return EDGES.filter(e=>edgeType(e)===id).map(e=>e.id);
+  if(EDGES.some(e=>e.id===id))return[id];
+  if(['aratuc'].includes(id))return edgesFor('sc');
+  if(['beja'].includes(id))return['dept>chartered'];
+  if(['eugenio','fourth'].includes(id))return[];
+  return EDGES.filter(e=>e.a===id||e.b===id).map(e=>e.id);
+}
+function light(id){
+  const es=edgesFor(id);const ns=new Set();
+  es.forEach(x=>{const e=EDGES.find(k=>k.id===x);ns.add(e.a);ns.add(e.b)});
+  if(el(id))ns.add(id);
+  if(!es.length&&!el(id)){clearLight();return}
+  map.classList.add('focus');
+  map.querySelectorAll('.node').forEach(n=>{const on=ns.has(n.dataset.id);n.classList.toggle('lit',on);if(on)n.style.setProperty('--glow',TONE[D[n.dataset.id].tone][2])});
+  svg.querySelectorAll('.w').forEach(w=>w.classList.toggle('lit',es.includes(w.dataset.e)));
+  map.querySelectorAll('.pill').forEach(p=>p.classList.toggle('lit',es.includes(p.dataset.e)));
+}
+function clearLight(){map.classList.remove('focus');map.querySelectorAll('.lit').forEach(n=>n.classList.remove('lit'));svg.querySelectorAll('.lit').forEach(n=>n.classList.remove('lit'))}
+
+/* sheet */
+const dlg=document.getElementById('b_dlg'),sheet=document.getElementById('b_sheet');
+let opener=null;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const partsHTML=ps=>`<div class="parts">`+ps.map(([l,items,neg])=>`<div class="part${neg?' no':''}"><div class="plabel">${esc(l)}</div><ol>${items.map(i=>`<li><span class="q">${esc(i)}</span></li>`).join('')}</ol></div>`).join('')+`</div>`;
+function memHTML(bd){
+  if(!bd)return'';const qz=sheet.classList.contains('quiz');
+  let h=`<section class="mem"><div class="mem-head"><h3>Memorize it</h3><button class="quizbtn" id="b_quizBtn" aria-pressed="${qz}">${qz?'Show all':'Quiz me'}</button></div>`+partsHTML(bd.parts);
+  h+=bd.acr.map(a=>`<div class="acr"><div class="tiles">${a.tiles.map(([k,w])=>`<div class="tile"><b>${esc(k)}</b><span class="q">${esc(w)}</span></div>`).join('')}</div><p class="say">${esc(a.say)}</p></div>`).join('');
+  if(bd.tip)h+=`<div class="hook"><span>Memory hook</span>${esc(bd.tip)}</div>`;
+  return h+`</section>`;
+}
+function label(k){const n=D[k];return n.rel?n.name:n.name}
+function fill(id){
+  const n=D[id];let tone=n.tone,kind=n.kind,def=n.def,name=n.name;
+  if(id==='dept>gocc'&&deficit){tone='violet';kind='Administrative supervision (operating deficit)';
+    def="Normally an attachment. But this GOCC incurred an operating deficit at the close of its fiscal year, so it is now subject to the department's administrative supervision, and its operating and capital budget is subject to the department's examination, review, modification and approval.";}
+  if(id==='gocc'&&deficit){tone='violet';kind='Under administrative supervision (operating deficit)'}
+  const [acc,ink]=TONE[tone];
+  sheet.style.setProperty('--accent',acc);sheet.style.setProperty('--accent-ink',ink);
+  document.getElementById('b_dlgKind').textContent=kind;
+  document.getElementById('b_dlgTitle').textContent=name;
+  document.getElementById('b_dlgDef').innerHTML=`<span class="q">${esc(def)}</span>`;
+  document.getElementById('b_dlgInfo').innerHTML=n.info?partsHTML(n.info):'';
+  document.getElementById('b_dlgMem').innerHTML=memHTML(n.bd);
+  const links=(n.links||[]).filter(k=>k!==id&&D[k]);
+  const rel=document.getElementById('b_dlgRel');
+  rel.innerHTML=links.length?`<h3>Related</h3><div class="row">${links.map(k=>`<button data-go="${k}">${esc(label(k))}</button>`).join('')}</div>`:'';
+  rel.style.display=links.length?'':'none';
+}
+function open(id,from){
+  opener=from||opener;current=id;fill(id);light(id);
+  if(!dlg.open){
+    dlg.showModal();
+    if(from&&innerWidth>600){const r=from.getBoundingClientRect(),s=sheet.getBoundingClientRect();sheet.style.transformOrigin=`${r.left+r.width/2-s.left}px ${r.top+r.height/2-s.top}px`}
+    else sheet.style.transformOrigin='50% 50%';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>dlg.classList.add('show')));
+  }else{sheet.scrollTop=0;if(!reduce)sheet.animate([{opacity:.4,transform:'scale(.98)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.22,.8,.2,1)'})}
+}
+function shut(){
+  if(!dlg.open)return;dlg.classList.remove('show');current=null;clearLight();
+  const done=()=>{dlg.close();opener&&opener.focus({preventScroll:true});opener=null};
+  reduce?done():setTimeout(done,380);
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#appB'))return;
+  if(e.target.closest('#b_quizBtn')){const on=sheet.classList.toggle('quiz');sheet.querySelectorAll('.q.shown').forEach(q=>q.classList.remove('shown'));const b=document.getElementById('b_quizBtn');b.textContent=on?'Show all':'Quiz me';b.setAttribute('aria-pressed',on);return}
+  const qq=e.target.closest('.sheet.quiz .q');if(qq){qq.classList.toggle('shown');return}
+  const g=e.target.closest('[data-go]');if(g){open(g.dataset.go);return}
+  const n=e.target.closest('[data-id]');if(n&&D[n.dataset.id]&&!e.target.closest('dialog')){open(n.dataset.id,n)}
+});
+document.getElementById('b_close').onclick=shut;
+dlg.addEventListener('click',e=>{if(e.target===dlg)shut()});
+dlg.addEventListener('cancel',e=>{e.preventDefault();shut()});
+let sy=null;
+sheet.addEventListener('touchstart',e=>{sy=sheet.scrollTop>0?null:e.touches[0].clientY},{passive:true});
+sheet.addEventListener('touchmove',e=>{if(sy===null||innerWidth>600)return;const dy=e.touches[0].clientY-sy;if(dy>0){sheet.style.transition='none';sheet.style.transform=`translateY(${dy}px)`}},{passive:true});
+sheet.addEventListener('touchend',e=>{if(sy===null)return;const dy=e.changedTouches[0].clientY-sy;sy=null;sheet.style.transition='';sheet.style.transform='';if(dy>90&&innerWidth<=600)shut()});
+
+})();
+
+(function(){
+  const tabs=[...document.querySelectorAll('#switch [role=tab]')],thumb=document.getElementById('swThumb');
+  const titles={appA:'The machinery of government',appB:'Who answers to whom'};
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let cur=location.hash==='#relationships'?'appB':'appA';
+  function place(){const b=tabs.find(t=>t.dataset.app===cur),sr=b.parentElement.getBoundingClientRect(),br=b.getBoundingClientRect();
+    thumb.style.width=br.width+'px';thumb.style.transform=`translateX(${br.left-sr.left}px)`}
+  function show(id,animate){
+    const prev=document.getElementById(cur),next=document.getElementById(id);
+    const swap=()=>{prev.hidden=true;prev.classList.remove('leaving');next.hidden=false;window.scrollTo(0,0);
+      window.dispatchEvent(new Event('resize'))};
+    if(id!==cur){ if(animate&&!reduce){prev.classList.add('leaving');setTimeout(swap,200)}else swap(); }
+    cur=id;
+    tabs.forEach(t=>{const on=t.dataset.app===id;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1});
+    document.title=titles[id];
+    history.replaceState(null,'',id==='appB'?'#relationships':'#structure');
+    place();
+  }
+  tabs.forEach(t=>t.addEventListener('click',()=>show(t.dataset.app,true)));
+  document.getElementById('switch').addEventListener('keydown',e=>{
+    if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+    const i=tabs.findIndex(t=>t.dataset.app===cur),n=tabs[(i+(e.key==='ArrowRight'?1:tabs.length-1))%tabs.length];
+    show(n.dataset.app,true);n.focus();
+  });
+  document.getElementById('appA').hidden=cur!=='appA';document.getElementById('appB').hidden=cur!=='appB';
+  show(cur,false);
+  new ResizeObserver(()=>{place();document.documentElement.style.setProperty('--nav-h',document.getElementById('topnav').offsetHeight+'px')}).observe(document.getElementById('topnav'));
+  document.fonts&&document.fonts.ready.then(place);
+})();
+
 </script>
 </body>
 </html>
