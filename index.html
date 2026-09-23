@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The machinery of government</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F6F7F9; --card:#FFFFFF; --ink:#1B2233; --muted:#5B6475; --faint:#8A92A3;
+  --line:#C3C9D4; --line-soft:#E3E6EC;
+  --blue:#0038A8; --red:#CE1126; --gold:#E8A900; --gold-ink:#8A5F00;
+  --glow-blue:rgba(0,56,168,.16); --glow-red:rgba(206,17,38,.16); --glow-gold:rgba(232,169,0,.22); --glow-ink:rgba(27,34,51,.14);
+  --shadow:0 1px 1px rgba(27,34,51,.04),0 2px 6px rgba(27,34,51,.06);
+  --shadow-up:0 2px 4px rgba(27,34,51,.05),0 12px 28px rgba(27,34,51,.12);
+  --spring:cubic-bezier(.2,.9,.25,1.15); --ease:cubic-bezier(.22,.8,.2,1);
+  --sans:"Instrument Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  --serif:"Newsreader",Georgia,serif;
+  color-scheme:light dark;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1220; --card:#161D2E; --ink:#EDF0F6; --muted:#A3ABBD; --faint:#737C90;
+    --line:#39445C; --line-soft:#232C40;
+    --blue:#6F9BFF; --red:#FF5C70; --gold:#FFC53D; --gold-ink:#FFC53D;
+    --glow-blue:rgba(111,155,255,.22); --glow-red:rgba(255,92,112,.22); --glow-gold:rgba(255,197,61,.22); --glow-ink:rgba(237,240,246,.16);
+    --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-up:0 12px 32px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0D1220; --card:#161D2E; --ink:#EDF0F6; --muted:#A3ABBD; --faint:#737C90;
+  --line:#39445C; --line-soft:#232C40;
+  --blue:#6F9BFF; --red:#FF5C70; --gold:#FFC53D; --gold-ink:#FFC53D;
+  --glow-blue:rgba(111,155,255,.22); --glow-red:rgba(255,92,112,.22); --glow-gold:rgba(255,197,61,.22); --glow-ink:rgba(237,240,246,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.3); --shadow-up:0 12px 32px rgba(0,0,0,.45);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;
+  padding:0 env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px)}
+
+header{max-width:1180px;margin:0 auto;padding:clamp(40px,8vw,88px) 24px clamp(22px,4vw,36px);text-align:center}
+.mark{width:44px;height:44px;margin:0 auto 22px;color:var(--gold)}
+h1{font-size:clamp(34px,6.2vw,64px);line-height:1.02;letter-spacing:-.035em;font-weight:700;margin:0}
+.lede{font-size:clamp(16px,2vw,19px);color:var(--muted);margin:16px auto 0;max-width:34ch;line-height:1.45}
+.key{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 26px;margin-top:22px;font-size:13px;color:var(--muted)}
+.key span{display:inline-flex;align-items:center;gap:9px}
+.key i{display:inline-block;width:28px;height:0;border-top:2px solid var(--line)}
+.key i.d{border-top-style:dashed}
+.key i.g{border-top:2px dashed var(--gold)}
+
+/* lens control */
+.lensbar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);z-index:20;display:flex;justify-content:center;padding:0 16px;margin:6px 0 0;pointer-events:none}
+.seg-wrap{pointer-events:auto;display:flex;align-items:center;gap:12px;padding:6px 6px 6px 18px;border-radius:999px;
+  background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(18px) saturate(1.6);-webkit-backdrop-filter:blur(18px) saturate(1.6);
+  border:1px solid var(--line-soft);box-shadow:0 8px 30px rgba(27,34,51,.10);max-width:100%}
+.seg-label{font-size:13.5px;font-weight:600;white-space:nowrap}
+.seg{position:relative;display:flex;background:color-mix(in srgb,var(--ink) 6%,transparent);border-radius:999px;padding:3px}
+.seg button{position:relative;z-index:1;appearance:none;border:0;background:transparent;font:600 13.5px var(--sans);color:var(--muted);
+  padding:9px 15px;border-radius:999px;cursor:pointer;white-space:nowrap;transition:color .3s var(--ease)}
+.seg button[aria-pressed="true"]{color:#fff}
+.seg button[data-lens=""][aria-pressed="true"]{color:var(--ink)!important}
+.seg button:focus-visible{outline:3px solid var(--blue);outline-offset:1px}
+.thumb{position:absolute;top:3px;bottom:3px;left:0;width:0;border-radius:999px;background:var(--ink);box-shadow:0 2px 8px rgba(27,34,51,.2);
+  transition:transform .5s var(--spring),width .5s var(--spring),background .35s var(--ease)}
+.lens-cap{max-width:640px;margin:14px auto 0;padding:0 24px;text-align:center;font-family:var(--serif);font-size:17px;line-height:1.5;color:var(--muted);
+  min-height:0;transition:opacity .35s var(--ease)}
+.lens-cap:empty{display:none}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .seg button[aria-pressed="true"]{color:#0D1220}}
+:root[data-theme="dark"] .seg button[aria-pressed="true"]{color:#0D1220}
+@media (max-width:560px){
+  .seg-wrap{padding:5px;gap:0}
+  .seg-label{display:none}
+  .seg button{padding:9px 12px;font-size:13px}
+}
+
+.tree{position:relative;max-width:1180px;margin:0 auto;padding:44px 24px 40px}
+svg.wires{position:absolute;left:0;top:0;pointer-events:none;overflow:visible}
+.wire{fill:none;stroke:var(--line);stroke-width:1.6;stroke-linecap:round;transition:stroke .45s var(--ease),stroke-width .45s var(--ease),opacity .45s}
+.wire.dash{stroke-dasharray:5 6}
+.wire.chainw{stroke:color-mix(in srgb,var(--blue) 45%,var(--line));stroke-width:2.2}
+.wire.chainl{stroke:color-mix(in srgb,var(--red) 40%,var(--line));stroke-width:2.2}
+.wire.gold{stroke:var(--gold);stroke-dasharray:3 6;stroke-width:1.8}
+.wire.lit{stroke:var(--accent,var(--blue));stroke-width:2.6}
+.tree.focus .wire:not(.lit){opacity:.3}
+
+.top{display:flex;justify-content:center;margin-bottom:56px}
+.realm{position:relative;border-radius:44px;padding:22px 22px 60px;margin-bottom:28px;border:1px solid var(--line-soft);
+  background:color-mix(in srgb,var(--ink) 2.5%,transparent);transition:background .5s var(--ease),border-color .5s,box-shadow .5s}
+.levels{display:grid;grid-template-columns:minmax(0,2.7fr) minmax(0,1fr);gap:24px;align-items:stretch}
+.terr{position:relative;border-radius:34px;padding:28px 16px 50px;border:1px solid transparent;display:flex;flex-direction:column;align-items:center;min-width:0;
+  transition:background .5s var(--ease),border-color .5s,box-shadow .5s}
+.terr.t-nat{background:color-mix(in srgb,var(--blue) 5%,transparent)}
+.terr.t-loc{background:color-mix(in srgb,var(--red) 5%,transparent)}
+.terr>.level{margin-bottom:56px}
+.realm.lit{border-color:var(--line);background:color-mix(in srgb,var(--ink) 6%,transparent);box-shadow:0 0 0 6px var(--glow-ink)}
+.terr.t-nat.lit{border-color:color-mix(in srgb,var(--blue) 45%,transparent);background:color-mix(in srgb,var(--blue) 11%,transparent);box-shadow:0 0 0 6px var(--glow-blue)}
+.terr.t-loc.lit{border-color:color-mix(in srgb,var(--red) 45%,transparent);background:color-mix(in srgb,var(--red) 11%,transparent);box-shadow:0 0 0 6px var(--glow-red)}
+
+.lanes{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.4fr);gap:64px;width:100%;align-items:start}
+.chain{display:flex;flex-direction:column;align-items:center;gap:40px}
+
+.node{appearance:none;font:600 15.5px/1.2 var(--sans);letter-spacing:-.01em;color:var(--ink);
+  background:var(--card);border:1px solid var(--line-soft);border-radius:999px;padding:13px 22px;
+  box-shadow:var(--shadow);cursor:pointer;position:relative;z-index:1;text-align:center;
+  transition:transform .5s var(--spring),box-shadow .35s var(--ease),border-color .35s,background .35s,opacity .35s;
+  -webkit-tap-highlight-color:transparent}
+.node:hover{transform:translateY(-2px);box-shadow:var(--shadow-up)}
+.node:active{transform:scale(.96);transition-duration:.15s}
+.node:focus-visible{outline:3px solid var(--blue);outline-offset:3px}
+.chain .node{min-width:200px}
+.level{font-size:18px;padding:17px 30px;color:#fff;border:0;letter-spacing:-.015em}
+.level.rep{background:var(--ink);color:var(--paper);font-size:clamp(17px,2.2vw,21px);padding:20px 34px}
+.level.nat{background:var(--blue)}
+.level.loc{background:var(--red)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .level.nat,:root:not([data-theme="light"]) .level.loc{color:#0D1220}}
+:root[data-theme="dark"] .level.nat,:root[data-theme="dark"] .level.loc{color:#0D1220}
+
+.terr.t-nat .chain .node{background:var(--card);border:2px solid color-mix(in srgb,var(--blue) 70%,transparent);color:var(--blue);
+  font-size:17px;font-weight:700;padding:15px 28px;min-width:230px;box-shadow:0 4px 14px color-mix(in srgb,var(--blue) 22%,transparent)}
+.terr.t-loc .chain .node{background:var(--card);border:2px solid color-mix(in srgb,var(--red) 65%,transparent);color:var(--red);
+  font-size:17px;font-weight:700;padding:15px 28px;min-width:200px;box-shadow:0 4px 14px color-mix(in srgb,var(--red) 20%,transparent)}
+.terr .chain .node:hover{box-shadow:var(--shadow-up)}
+.terr.t-nat .chain .node.lit{box-shadow:0 0 0 4px var(--glow-blue),var(--shadow-up)}
+.terr.t-loc .chain .node.lit{box-shadow:0 0 0 4px var(--glow-red),var(--shadow-up)}
+@media (max-width:720px){.terr.t-nat .chain .node{min-width:200px}}
+
+.lane>.node{background:var(--card);border:2px solid color-mix(in srgb,var(--gold) 80%,transparent);color:var(--gold-ink);font-size:17px;font-weight:700;padding:15px 20px;
+  box-shadow:0 4px 14px color-mix(in srgb,var(--gold) 24%,transparent)}
+.lane>.group{border:2px solid color-mix(in srgb,var(--gold) 80%,transparent);box-shadow:0 4px 14px color-mix(in srgb,var(--gold) 24%,transparent)}
+.lane>.split{border:2px solid color-mix(in srgb,var(--gold) 80%,transparent);box-shadow:0 4px 14px color-mix(in srgb,var(--gold) 24%,transparent)}
+.split>.node.split-head{color:var(--gold-ink);font-size:17px;font-weight:700;padding:15px 20px 12px}
+.halves{border-top-color:color-mix(in srgb,var(--gold) 45%,transparent)}
+.node.half+.node.half{border-left-color:color-mix(in srgb,var(--gold) 45%,transparent)}
+.node.half b{color:var(--gold-ink)}
+.lane .group>.node.head,.lane .gocc>.node.head,.lane .related>.node.head{color:var(--gold-ink);font-weight:700;font-size:16.5px}
+.lane .chips .node,.lane .related .node.rc{background:var(--card);border:1.5px solid color-mix(in srgb,var(--gold) 65%,transparent);color:var(--gold-ink);font-weight:700;
+  box-shadow:0 3px 10px color-mix(in srgb,var(--gold) 18%,transparent)}
+.lane>.node.lit,.lane .chips .node.lit,.lane .related .node.rc.lit{box-shadow:0 0 0 4px var(--glow-gold),var(--shadow-up)}
+.dot::before{content:"";display:inline-block;width:7px;height:7px;border-radius:50%;background:color-mix(in srgb,var(--gold) 80%,transparent);margin-right:10px;vertical-align:1px}
+.tree.focus .node:not(.lit){opacity:.4}
+.node.lit{box-shadow:0 0 0 4px var(--glow),var(--shadow-up)}
+.node.lit.level{box-shadow:0 0 0 5px var(--glow),var(--shadow-up)}
+
+/* territory labels */
+.node.tab{position:absolute;bottom:0;left:24px;transform:translateY(50%);z-index:3;font-size:14.5px;padding:10px 18px 10px 12px;
+  display:inline-flex;align-items:center;gap:10px;white-space:nowrap;box-shadow:var(--shadow-up)}
+.node.tab:hover{transform:translateY(calc(50% - 2px))}
+.node.tab:active{transform:translateY(50%) scale(.96)}
+.realm>.node.tab{left:50%;transform:translate(-50%,50%)}
+.realm>.node.tab:hover{transform:translate(-50%,calc(50% - 2px))}
+.realm>.node.tab:active{transform:translate(-50%,50%) scale(.96)}
+.tab .ic{width:24px;height:24px;border-radius:8px;display:grid;place-items:center;flex:none;color:#fff}
+.realm>.tab .ic{background:var(--ink);color:var(--paper)}
+.t-nat>.tab{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 35%,transparent)}
+.t-nat>.tab .ic{background:var(--blue)}
+.t-loc>.tab{color:var(--red);border-color:color-mix(in srgb,var(--red) 35%,transparent)}
+.t-loc>.tab .ic{background:var(--red)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .terr>.tab .ic{color:#0D1220}}
+:root[data-theme="dark"] .terr>.tab .ic{color:#0D1220}
+
+/* lane */
+.lane{position:relative;z-index:1;border:1.6px dashed var(--line);border-radius:32px;padding:26px 20px 20px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.split{position:relative;z-index:1;background:var(--card);border:1px solid var(--line-soft);border-radius:18px;box-shadow:var(--shadow);overflow:hidden;transition:box-shadow .35s var(--ease),opacity .35s}
+.split>.node.split-head{display:block;width:100%;text-align:left;border:0;border-radius:0;box-shadow:none;background:transparent;padding:13px 18px 11px}
+.halves{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--line-soft)}
+.node.half{border:0;border-radius:0;box-shadow:none;background:transparent;padding:11px 12px 12px;text-align:center}
+.node.half+.node.half{border-left:1px solid var(--line-soft)}
+.node.half b{display:block;font-size:16px;font-weight:700;letter-spacing:-.01em}
+.node.half small{display:block;font:500 12px var(--sans);color:var(--muted);margin-top:2px}
+.split>.node:hover,.node.half:hover{transform:none;box-shadow:none;background:color-mix(in srgb,var(--gold) 9%,var(--card))}
+.split>.node:active,.node.half:active{transform:none;background:color-mix(in srgb,var(--gold) 16%,var(--card))}
+.split .node.lit{box-shadow:none;background:color-mix(in srgb,var(--gold) 14%,var(--card))}
+.split:has(.lit){box-shadow:0 0 0 4px var(--glow-gold),var(--shadow-up)}
+.tree.focus .split .node:not(.lit){opacity:.55}
+.lane-title{font-size:13px;color:var(--muted);text-align:center;margin:-4px 0 6px}
+.lane>.node{border-radius:18px;text-align:left}
+.group{background:color-mix(in srgb,var(--gold) 3%,var(--card));border:1px solid var(--line-soft);border-radius:26px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.group>.node.head{align-self:flex-start;box-shadow:none;background:transparent;border-color:transparent;padding:8px 10px;font-size:15.5px}
+.group>.node.head:hover{background:var(--card);box-shadow:var(--shadow)}
+.chips{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.chips .node{font-size:14px;padding:11px 14px;border-radius:14px}
+.chips .wide{grid-column:1/-1}
+
+/* GOCC boundary with related corporation straddling it */
+.gocc{background:color-mix(in srgb,var(--gold) 8%,var(--card));border:1.6px solid color-mix(in srgb,var(--gold) 55%,transparent);border-radius:22px;padding:10px;display:flex;flex-direction:column;gap:10px;position:relative}
+.gocc.cut{padding-bottom:0}
+.related{position:relative;z-index:1;border:1.5px dashed var(--line);border-radius:18px;padding:8px 8px 10px;background:transparent;display:flex;flex-direction:column;gap:8px}
+.related>.rc.in{margin-bottom:18px}
+.related>.node.head{align-self:flex-start;box-shadow:none;background:transparent;border-color:transparent;padding:6px 8px;font-size:15px}
+.related>.node.head:hover{background:var(--card);box-shadow:var(--shadow)}
+.related .node.rc{border-radius:14px;padding:10px 14px;text-align:left;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.rc small{font:500 12px var(--sans);color:var(--muted)}
+.rc.in small{color:var(--gold-ink)}
+.boundary-tag{position:absolute;right:14px;bottom:0;transform:translateY(50%);z-index:2;font:600 11.5px var(--sans);color:var(--gold-ink);
+  background:color-mix(in srgb,var(--gold) 8%,var(--card));padding:2px 8px;border-radius:999px;border:1px solid color-mix(in srgb,var(--gold) 70%,transparent);pointer-events:none;right:24px}
+
+/* office echoes */
+.echo{margin-top:6px;border-top:1px solid var(--line-soft);padding-top:14px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 10px}
+.echo p{margin:0;font-size:13px;color:var(--muted);flex:1 1 180px}
+.node.ghost{background:transparent;border:1.5px dashed var(--line);box-shadow:none;font-size:13.5px;padding:8px 14px;color:var(--muted)}
+.node.ghost:hover{background:var(--card);color:var(--ink)}
+.node.ghost.lit{color:var(--ink);background:var(--card)}
+
+footer{text-align:center;color:var(--faint);font-size:12.5px;padding:24px 24px 48px}
+
+@media (max-width:980px){.levels{grid-template-columns:1fr;gap:56px}}
+@media (max-width:720px){
+  .lanes{grid-template-columns:1fr;gap:44px}
+  .chain .node{min-width:180px}
+  .echo p{flex-basis:100%}
+}
+@media (max-width:420px){
+  .chips{grid-template-columns:1fr}
+  .lane{padding:22px 12px 12px;border-radius:26px}
+  .realm{padding:12px 8px 60px;border-radius:32px}
+  .terr{padding:24px 8px 46px;border-radius:26px}
+  .terr>.node.tab{left:14px}
+}
+
+/* sheet */
+dialog{border:0;padding:0;background:transparent;max-width:min(560px,calc(100vw - 32px));width:100%;overflow:visible;color:var(--ink)}
+dialog::backdrop{background:rgba(13,18,32,0);backdrop-filter:blur(0);-webkit-backdrop-filter:blur(0);transition:all .4s var(--ease)}
+dialog.show::backdrop{background:rgba(13,18,32,.28);backdrop-filter:blur(10px) saturate(1.2);-webkit-backdrop-filter:blur(10px) saturate(1.2)}
+.sheet{position:relative;background:var(--card);border-radius:30px;padding:30px 30px 26px;box-shadow:0 30px 80px rgba(13,18,32,.28),0 0 0 1px var(--line-soft);
+  transform:scale(.6);opacity:0;transition:transform .55s var(--spring),opacity .3s var(--ease);max-height:85vh;overflow:auto}
+dialog.show .sheet{transform:none;opacity:1}
+.kind{display:flex;align-items:center;gap:9px;font-size:13px;font-weight:500;color:var(--accent-ink,var(--accent))}
+.kind::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--accent)}
+.sheet h2{font-size:clamp(26px,5vw,34px);letter-spacing:-.03em;line-height:1.08;margin:10px 44px 14px 0;font-weight:700}
+.def{font-family:var(--serif);font-size:clamp(17.5px,2.4vw,20px);line-height:1.55;margin:0}
+.rel{margin-top:22px;padding-top:18px;border-top:1px solid var(--line-soft)}
+.rel h3{font-size:12.5px;font-weight:500;color:var(--muted);margin:0 0 10px}
+.rel .row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.rel .note{margin:0 0 14px;font-size:14.5px;line-height:1.5;color:var(--muted)}
+.rel button{font:500 13.5px var(--sans);color:var(--ink);background:var(--paper);border:1px solid var(--line-soft);border-radius:999px;padding:8px 14px;cursor:pointer;transition:transform .4s var(--spring),background .2s}
+.rel button:hover{transform:translateY(-1px);background:var(--card)}
+.rel button:focus-visible,.close:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.close{position:absolute;top:18px;right:18px;width:36px;height:36px;border-radius:50%;border:0;background:var(--paper);color:var(--muted);cursor:pointer;display:grid;place-items:center;transition:transform .4s var(--spring)}
+.close:hover{transform:rotate(90deg)}
+@media (max-width:600px){
+  dialog{max-width:100vw;margin:auto 0 0;width:100vw}
+  .sheet{border-radius:28px 28px 0 0;padding:14px 22px calc(24px + env(safe-area-inset-bottom,0px));transform:translateY(100%);opacity:1;transition:transform .5s var(--ease)}
+  .sheet::before{content:"";display:block;width:40px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 18px}
+  .close{top:26px}
+}
+
+dialog{max-width:min(640px,calc(100vw - 32px))}
+.mem{margin-top:24px;padding-top:20px;border-top:1px solid var(--line-soft)}
+.mem-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.mem-head h3{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em;color:var(--ink)}
+.quizbtn{font:600 13px var(--sans);border:0;border-radius:999px;padding:8px 14px;cursor:pointer;background:var(--accent-ink,var(--accent));color:#fff;transition:transform .4s var(--spring)}
+.quizbtn:hover{transform:translateY(-1px)}
+.quizbtn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.parts{display:grid;gap:12px}
+.part{background:var(--paper);border-radius:16px;padding:12px 14px}
+.plabel{font-size:12.5px;font-weight:600;color:var(--accent-ink,var(--accent));margin-bottom:6px}
+.part ol{margin:0;padding-left:22px;display:grid;gap:4px}
+.part li{font-size:15px;line-height:1.45}
+.part li::marker{color:var(--faint);font-size:13px}
+.acr{margin-top:16px}
+.tiles{display:flex;flex-wrap:wrap;gap:8px}
+.tile{flex:1 1 84px;max-width:150px;min-width:74px;border-radius:14px;padding:10px 8px 9px;text-align:center;
+  background:color-mix(in srgb,var(--accent) 10%,var(--card));border:1px solid color-mix(in srgb,var(--accent) 28%,transparent)}
+.tile b{display:block;font-size:24px;line-height:1.05;letter-spacing:-.02em;color:var(--accent-ink,var(--accent));font-weight:700}
+.tile span{display:block;font-size:12px;line-height:1.3;color:var(--ink);margin-top:5px}
+.say{margin:8px 2px 0;font-family:var(--serif);font-style:italic;font-size:16px;color:var(--muted)}
+.cmp{margin-top:18px;border:1px solid var(--line-soft);border-radius:18px;padding:14px}
+.cmp-t{font-size:15px;font-weight:700;margin-bottom:10px}
+.cmp-g{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cmp-c{background:color-mix(in srgb,var(--accent) 9%,var(--card));border-radius:14px;padding:12px}
+.cmp-c>b{display:block;font-size:22px;letter-spacing:-.02em;color:var(--accent-ink,var(--accent))}
+.cmp-c>small{display:block;font-size:12px;color:var(--muted);line-height:1.35;margin:2px 0 8px}
+.cmp dl{margin:0;display:grid;gap:2px}
+.cmp dt{font-size:11.5px;color:var(--faint);margin-top:6px}
+.cmp dd{margin:0;font-size:14px;line-height:1.4}
+.cmp-n{margin:10px 2px 0;font-size:14.5px;line-height:1.5}
+.cmp-n strong{font-weight:600;color:var(--accent-ink,var(--accent))}
+@media (max-width:380px){.cmp-g{grid-template-columns:1fr}}
+.hook{margin-top:18px;border-radius:16px;padding:12px 14px;background:color-mix(in srgb,var(--gold) 12%,var(--card));font-size:14.5px;line-height:1.5}
+.hook span{display:block;font-size:12.5px;font-weight:600;color:var(--gold-ink);margin-bottom:3px}
+.sheet.quiz .q{filter:blur(6px);cursor:pointer;user-select:none;-webkit-user-select:none;transition:filter .35s var(--ease)}
+.sheet.quiz .q.shown{filter:none}
+@media (max-width:600px){dialog{max-width:100vw}.sheet{max-height:88vh}.tile b{font-size:21px}}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .quizbtn{color:#0D1220}}
+:root[data-theme="dark"] .quizbtn{color:#0D1220}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after,dialog::backdrop{transition-duration:.01ms!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <svg class="mark" viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="7" fill="currentColor"/><g stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M22 3v7M22 34v7M3 22h7M34 22h7M8.6 8.6l5 5M30.4 30.4l5 5M8.6 35.4l5-5M30.4 13.6l5-5"/></g></svg>
+  <h1>The machinery<br>of government</h1>
+  <p class="lede">How the Philippine government and its agencies fit together. Tap anything to read what it means.</p>
+  <div class="key" aria-hidden="true">
+    <span><i></i>Part of</span>
+    <span><i class="d"></i>Outside the departmental chain</span>
+    <span><i class="g"></i>Attached or supervised</span>
+  </div>
+</header>
+
+<div class="lensbar">
+  <div class="seg-wrap">
+    <span class="seg-label">Highlight</span>
+    <div class="seg" id="seg" role="group" aria-label="Highlight agencies">
+      <span class="thumb" id="thumb"></span>
+      <button data-lens="" aria-pressed="true">Off</button>
+      <button data-lens="agency" aria-pressed="false">All agencies</button>
+      <button data-lens="natagency" aria-pressed="false">National</button>
+      <button data-lens="locagency" aria-pressed="false">Local</button>
+    </div>
+  </div>
+</div>
+<p class="lens-cap" id="lensCap" aria-live="polite"></p>
+
+<main class="tree" id="tree">
+  <svg class="wires" id="wires" aria-hidden="true"></svg>
+
+  <div class="top"><button class="node level rep" data-id="republic">Government of the Republic</button></div>
+
+  <div class="realm" data-realm="agency">
+    <button class="node tab" data-id="agency"><span class="ic"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="1.5" y="1.5" width="11" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>Agency of the Government</button>
+    <div class="levels">
+      <div class="terr t-nat" data-realm="natagency">
+        <button class="node tab" data-id="natagency"><span class="ic"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="1.5" y="1.5" width="11" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>National agency</button>
+        <button class="node level nat" data-id="national">National Government</button>
+        <div class="lanes">
+          <div class="chain">
+            <button class="node" data-id="dept">Department</button>
+            <button class="node" data-id="bureau">Bureau</button>
+            <button class="node" data-id="office">Office</button>
+            <button class="node" data-id="division">Division</button>
+          </div>
+          <div class="lane" data-id="lane">
+            <div class="lane-title">Outside the departmental chain</div>
+            <div class="split">
+              <button class="node split-head dot" data-id="instr">Instrumentality</button>
+              <div class="halves">
+                <button class="node half" data-id="gicp"><b>GICP</b><small>not labeled a corporation</small></button>
+                <button class="node half" data-id="gce"><b>GCE</b><small>labeled a corporation</small></button>
+              </div>
+            </div>
+            <button class="node dot" data-id="regul">Regulatory agency</button>
+            <button class="node dot" data-id="chartered">Chartered institution</button>
+            <div class="group" id="pubBox">
+              <button class="node head dot" data-id="pubcorp">Public corporation</button>
+              <div class="gocc" id="goccBox">
+                <button class="node head" data-id="gocc" style="align-self:flex-start;box-shadow:none;background:transparent;border-color:transparent;padding:8px 10px">GOCC</button>
+                <div class="chips">
+                  <button class="node" data-id="cgocc">Chartered GOCC</button>
+                  <button class="node" data-id="ncgocc">Non-chartered GOCC</button>
+                  <button class="node wide" data-id="gfi">Government financial institution</button>
+                </div>
+                <div class="related" id="relBox">
+                  <button class="node head" data-id="related">Related corporation</button>
+                  <button class="node rc in" data-id="subsidiary" id="subChip">Subsidiary <small>majority owned, so a GOCC</small></button>
+                  <button class="node rc" data-id="affiliate">Affiliate <small>50% or less, not a GOCC</small></button>
+                </div>
+                <span class="boundary-tag" id="bTag">GOCC line</span>
+              </div>
+            </div>
+            <div class="echo">
+              <p>Any of these can have its own offices and divisions.</p>
+              <button class="node ghost" data-id="office">Office</button>
+              <button class="node ghost" data-id="division">Division</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="terr t-loc" data-realm="locagency">
+        <button class="node tab" data-id="locagency"><span class="ic"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><rect x="1.5" y="1.5" width="11" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span>Local agency</button>
+        <button class="node level loc" data-id="local">Local Government</button>
+        <div class="chain">
+          <button class="node" data-id="loffice">Office</button>
+          <button class="node" data-id="ldivision">Division</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>A study companion. Always read the codal provisions and the original cases.</footer>
+
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="sheet" id="sheet">
+    <button class="close" id="close" aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <div class="kind" id="dlgKind"></div>
+    <h2 id="dlgTitle"></h2>
+    <p class="def" id="dlgDef"></p>
+    <div id="dlgMem"></div>
+    <div class="rel" id="dlgRel"></div>
+  </div>
+</dialog>
+
+<script>
+const T=(k,w)=>[k,w];
+const D = {
+  republic:{name:"Government of the Republic of the Philippines",kind:"Level of government",tone:"ink",
+    def:"Refers to the corporate governmental entity through which the functions of government are exercised throughout the Philippines, including, save as the contrary appears from the context, the various arms through which political authority is made effective in the Philippines, whether pertaining to the autonomous regions, the provincial, city, municipal or barangay subdivisions or other forms of local government.",
+    bd:{parts:[
+      ["What it is",["Corporate governmental entity"]],
+      ["What it does",["Through which the functions of government are exercised","Throughout the Philippines"]],
+      ["Includes (save as the contrary appears from the context)",["The various arms through which political authority is made effective in the Philippines"]],
+      ["Whether pertaining to",["Autonomous regions","Provincial subdivisions","City subdivisions","Municipal subdivisions","Barangay subdivisions","Other forms of local government"]]],
+     acr:[{code:"CGE",tiles:[T("C","Corporate"),T("G","Governmental"),T("E","Entity")],say:"What it is: a CGE."},
+          {code:"APCMBO",tiles:[T("A","Autonomous regions"),T("P","Provincial"),T("C","City"),T("M","Municipal"),T("B","Barangay"),T("O","Other forms of local government")],say:"“A Proud City Makes Barangays Organized.”"}],
+     tip:"Follow the flow: WHAT it is (a CGE), WHAT it does (exercises the functions of government), WHERE (throughout the Philippines), and WHO else is included (the arms: APCMBO)."}},
+  national:{name:"National Government",kind:"Level of government",tone:"blue",parent:"republic",
+    def:"Refers to the entire machinery of the central government, as distinguished from the different forms of local governments.",
+    bd:{parts:[["What it is",["Entire machinery","Of the central government"]],["As distinguished from",["The different forms of local governments"]]],
+     acr:[{code:"EMC",tiles:[T("E","Entire"),T("M","Machinery"),T("C","Central government")],say:"“Every Machine Central.”"}],
+     tip:"Two halves: what it is (EMC) and what it is not (local)."}},
+  local:{name:"Local Government",kind:"Level of government",tone:"red",parent:"republic",
+    def:"Refers to political subdivisions established by or in accordance with the Constitution.",
+    bd:{parts:[["What it is",["Political subdivisions"]],["Established either",["By the Constitution, or","In accordance with the Constitution"]]],
+     acr:[{code:"PS-BIAC",tiles:[T("P","Political"),T("S","Subdivisions"),T("B","By"),T("IA","In Accordance with"),T("C","the Constitution")],say:"“PS, BIA-C”: Political Subdivisions, By or In Accordance with the Constitution."}],
+     tip:"Watch the word “or”. The Constitution need not create the subdivision itself; creation in accordance with it is enough."}},
+  dept:{name:"Department",kind:"Departmental chain",tone:"blue",parent:"national",
+    def:"Refers to an executive department created by law. This shall include any instrumentality, as herein defined, having or assigned the rank of a department, regardless of its name or designation.",
+    bd:{parts:[["General rule",["An executive department","Created by law"]],["Also includes",["Any instrumentality","Having or assigned the rank of a department","Regardless of its name or designation"]]],
+     acr:[{code:"ECL",tiles:[T("E","Executive department"),T("C","Created by"),T("L","Law")],say:"The rule: ECL."},
+          {code:"IRD",tiles:[T("I","Instrumentality"),T("R","with the Rank of a"),T("D","Department")],say:"The add-on: IRD. Rank beats name."}],
+     tip:"“Rank, not name.” If an instrumentality has or is assigned department rank, it counts as a department whatever it is called."}},
+  bureau:{name:"Bureau",kind:"Departmental chain",tone:"blue",parent:"dept",
+    def:"Refers to any principal subdivision or unit of any department. This shall include any principal subdivision or unit of any instrumentality given or assigned the rank of a bureau, regardless of actual name or designation, as in the case of department-wide regional offices.",
+    bd:{parts:[["General rule",["Any principal subdivision or unit","Of any department"]],["Also includes",["Any principal subdivision or unit of any instrumentality","Given or assigned the rank of a bureau","Regardless of actual name or designation"]],["Example",["Department-wide regional offices"]]],
+     acr:[{code:"PSU-D",tiles:[T("P","Principal"),T("S","Subdivision"),T("U","or Unit"),T("D","of a Department")],say:"“A bureau is a department's PSU.”"}],
+     tip:"Same pattern as Department: rank, not name. A department can be an instrumentality with department rank; a bureau can be a unit of an instrumentality with bureau rank."}},
+  office:{name:"Office",kind:"Departmental chain and beyond",tone:"blue",parent:"bureau",also:["dept"],
+    def:"Refers, within the framework of governmental organization, to any major functional unit of a department or bureau including regional offices. It may also refer to any position held or occupied by individual persons, whose functions are defined by law or regulation.",
+    note:"An office can sit directly under a department, not only under a bureau. It also turns up outside the chain: instrumentalities, GOCCs and local governments have offices too.",
+    bd:{parts:[["Meaning 1: a unit (within the framework of governmental organization)",["Any major functional unit","Of a department or bureau","Including regional offices"]],["Meaning 2: a position",["Any position held or occupied by individual persons","Whose functions are defined by law or regulation"]]],
+     acr:[{code:"MFU",tiles:[T("M","Major"),T("F","Functional"),T("U","Unit")],say:"Meaning 1: an MFU of a department or bureau."},
+          {code:"P-LR",tiles:[T("P","Position"),T("L","defined by Law"),T("R","or Regulation")],say:"Meaning 2: a post whose functions come from law or regulation."}],
+     tip:"One word, two meanings: the room (a unit, MFU) and the chair (a position)."}},
+  division:{name:"Division",kind:"Departmental chain and beyond",tone:"blue",parent:"office",
+    def:"Within the framework of an office organization, it refers to a sub-unit in an office that performs or exercises a specific set of functions being performed by public officers. Functions are usually divided for focus and efficiency in the service delivery.",
+    note:"This is the deck's own description; the Administrative Code has no separate definition. Wherever there is an office, there can be divisions, inside the departmental chain or outside it.",
+    bd:{parts:[["Where",["Within the framework of an office organization","A sub-unit in an office"]],["What it does",["Performs or exercises a specific set of functions","Being performed by public officers"]],["Why functions are divided",["Focus","Efficiency in service delivery"]]],
+     acr:[{code:"SSF",tiles:[T("S","Sub-unit"),T("S","Specific set of"),T("F","Functions")],say:"What it is."},{code:"FE",tiles:[T("F","Focus"),T("E","Efficiency")],say:"Why it exists."}],
+     tip:"“Sub-unit, Specific Set, For Focus and Efficiency.”"}},
+  loffice:{name:"Office",kind:"Local unit",tone:"red",parent:"local",ref:"office"},
+  ldivision:{name:"Division",kind:"Local unit",tone:"red",parent:"loffice",ref:"division"},
+  lane:{name:"Outside the departmental chain",tone:"gold",parent:"national"},
+  instr:{name:"Instrumentality",kind:"Outside the departmental chain",tone:"gold",parent:"lane",
+    def:"Refers to any agency of the National Government, not integrated within the department framework, vested with special functions or jurisdiction by law, endowed with some if not all corporate powers, administering special funds, and enjoying operational autonomy, usually through a charter. This term includes regulatory agencies, chartered institutions and government-owned or controlled corporations.",
+    note:"Under RA 10149 these are now Government Instrumentalities with Corporate Powers (GICP) or Government Corporate Entities (GCE): neither corporations nor agencies integrated within the departmental framework. Examples: MIAA, PPA, PDIC, MWSS, LLDA, PFDA, BCDA, CPA, LWUA, APO.",
+    bd:{parts:[["What it is",["Any agency of the National Government"]],["Five features",["Not integrated within the department framework","Vested with special functions or jurisdiction by law","Endowed with some if not all corporate powers","Administering special funds","Enjoying operational autonomy, usually through a charter"]],["Includes",["Regulatory agencies","Chartered institutions","Government-owned or controlled corporations"]]],
+     acr:[{code:"NSCFA",tiles:[T("N","Not integrated"),T("S","Special functions or jurisdiction"),T("C","Corporate powers"),T("F","special Funds"),T("A","operational Autonomy")],say:"“Never Say Corporations Fear Autonomy.”"},
+          {code:"RCG",tiles:[T("R","Regulatory agencies"),T("C","Chartered institutions"),T("G","GOCCs")],say:"“Really Cool Guys” are included."}],
+     tip:"Picture a mini-company outside the department: its own job (S), its own powers (C), its own money (F), its own say (A)."}},
+  gicp:{name:"GICP",full:"Government Instrumentality with Corporate Powers",kind:"A kind of instrumentality",tone:"gold",parent:"instr",
+    def:"Government Instrumentalities with Corporate Powers (GICP)/Government Corporate Entities (GCE) refer to instrumentalities or agencies of the government, which are neither corporations nor agencies integrated within the departmental framework, but vested by law with special functions or jurisdiction, endowed with some if not all corporate powers, administering special funds, and enjoying operational autonomy usually through a charter.",
+    note:"A GICP is an instrumentality. What sets it apart from a GCE: it is not labeled as a corporation (it can be a commission or an authority), and it has capitalization but no outstanding capital stock.",cmpWith:"gce"},
+  gce:{name:"GCE",full:"Government Corporate Entity",kind:"A kind of instrumentality",tone:"gold",parent:"instr",
+    def:"Government Instrumentalities with Corporate Powers (GICP)/Government Corporate Entities (GCE) refer to instrumentalities or agencies of the government, which are neither corporations nor agencies integrated within the departmental framework, but vested by law with special functions or jurisdiction, endowed with some if not all corporate powers, administering special funds, and enjoying operational autonomy usually through a charter.",
+    note:"A GCE is an instrumentality. What sets it apart from a GICP: it is labeled as a corporation, and like a GICP it has capitalization but no outstanding capital stock.",cmpWith:"gicp"},
+  regul:{name:"Regulatory agency",kind:"Outside the departmental chain",tone:"gold",parent:"lane",
+    def:"Refers to any agency expressly vested with jurisdiction to regulate, administer or adjudicate matters affecting substantial rights and interests of private persons, the principal powers of which are exercised by a collective body, such as a commission, board or council.",
+    bd:{parts:[["What it is",["Any agency","Expressly vested with jurisdiction"]],["To do three things",["Regulate","Administer","Adjudicate"]],["Over",["Matters affecting substantial rights and interests","Of private persons"]],["Principal powers exercised by",["A collective body"]],["Such as",["A commission","A board","A council"]]],
+     acr:[{code:"RAA",tiles:[T("R","Regulate"),T("A","Administer"),T("A","Adjudicate")],say:"The three verbs."},{code:"CBC",tiles:[T("C","Commission"),T("B","Board"),T("C","Council")],say:"The collective body."}],
+     tip:"“RAA by a CBC.” Four words to watch: expressly, substantial, private, collective."}},
+  chartered:{name:"Chartered institution",kind:"Outside the departmental chain",tone:"gold",parent:"lane",
+    def:"Refers to any agency organized or operating under a special charter, and vested by law with functions relating to specific constitutional policies or objectives. This term includes the state universities and colleges and the monetary authority of the State.",
+    bd:{parts:[["What it is",["Any agency","Organized or operating under a special charter"]],["Vested by law with",["Functions relating to specific constitutional policies or objectives"]],["Includes",["State universities and colleges","The monetary authority of the State"]]],
+     acr:[{code:"SC-CPO",tiles:[T("SC","Special Charter"),T("C","Constitutional"),T("P","Policies"),T("O","or Objectives")],say:"What makes it one."},
+          {code:"SUMA",tiles:[T("SU","State Universities and colleges"),T("MA","Monetary Authority")],say:"“Suma”: the sum of what's included."}],
+     tip:"State universities serve the constitutional policy on education; the monetary authority serves the one on currency and banking."}},
+  pubcorp:{name:"Public corporation",kind:"Outside the departmental chain",tone:"gold",parent:"lane",
+    def:"In general, a public corporation is one created by, affiliated with, or attached to, the State as its own agency or instrumentality to help it in carrying out its governmental functions. These corporations are treated by law as agencies or instrumentalities of the government which are not subject to the tests of ownership or control and economic viability but to different criteria relating to their public purposes/interests or constitutional policies and objectives and their administrative relationship to the government or any of its Departments or Offices.",
+    note:"Every GOCC is a public corporation, but not every public corporation is a GOCC. An affiliate is one example.",
+    bd:{parts:[["Its link to the State",["Created by","Affiliated with","Attached to"]],["As the State's",["Own agency or instrumentality"]],["Purpose",["To help it carry out its governmental functions"]],["Not tested by",["Ownership or control","Economic viability"]],["Tested instead by",["Public purposes or interests","Constitutional policies and objectives","Administrative relationship to the government or its departments or offices"]]],
+     acr:[{code:"CAA",tiles:[T("C","Created by"),T("A","Affiliated with"),T("A","Attached to")],say:"Its link to the State."},
+          {code:"OCE",tiles:[T("O","Ownership"),T("C","Control"),T("E","Economic viability")],say:"NOT the test."},
+          {code:"PCA",tiles:[T("P","Public purpose"),T("C","Constitutional policies"),T("A","Administrative relationship")],say:"The real test."}],
+     tip:"“CAA: not OCE, but PCA.”"}},
+  gocc:{name:"Government-owned or controlled corporation",kind:"Public corporation",tone:"gold",parent:"pubcorp",
+    def:"Refers to any agency organized as a stock or non-stock corporation, vested with functions relating to public needs whether governmental or proprietary in nature, and owned by the Government of the Republic of the Philippines directly or through its instrumentalities either wholly or, where applicable as in the case of stock corporations, to the extent of at least a majority of its outstanding capital stock. Provided, however, that for purposes of this Act, the term “GOCC” shall include GICP/GCE and GFI.",
+    note:"The gold border is the GOCC line. A related corporation straddles it: the subsidiary falls inside, the affiliate falls outside. A GOCC is attached to the department with allied functions.",
+    bd:{parts:[["Form",["Any agency organized as a stock or non-stock corporation"]],["Function",["Vested with functions relating to public needs","Whether governmental or proprietary in nature"]],["Ownership",["Owned by the Government of the Republic","Directly or through its instrumentalities","Either wholly, or","For stock corporations, at least a majority of its outstanding capital stock"]],["Proviso (for RA 10149)",["Includes GICP/GCE","Includes GFI"]]],
+     acr:[{code:"FFO",tiles:[T("F","Form"),T("F","Function"),T("O","Ownership")],say:"The three elements, in order."},
+          {code:"SN · GP · WM",tiles:[T("S/N","Stock or Non-stock"),T("G/P","Governmental or Proprietary"),T("W/M","Wholly or Majority")],say:"Each element comes in a pair."},
+          {code:"GG",tiles:[T("G","GICP/GCE"),T("G","GFI")],say:"The proviso adds two Gs."}],
+     tip:"“Form, Function, Ownership”, each with its pair: S/N, G/P, W/M."}},
+  cgocc:{name:"Chartered GOCC",kind:"Kind of GOCC",tone:"gold",parent:"gocc",
+    def:"Refers to a GOCC, including Government Financial Institutions, created and vested with functions by a special law.",
+    bd:{parts:[["What it is",["A GOCC","Including GFIs"]],["By a special law, it is",["Created","Vested with functions"]]],
+     acr:[{code:"CVS",tiles:[T("C","Created"),T("V","Vested with functions"),T("S","by a Special law")],say:"“CVS”: Created and Vested by a Special law."}],
+     tip:"Chartered = born of a special law. Non-chartered = born of the Corporation Code."}},
+  ncgocc:{name:"Non-chartered GOCC",kind:"Kind of GOCC",tone:"gold",parent:"gocc",
+    def:"Refers to a GOCC organized and operating under Batas Pambansa Bilang 68, or “The Corporation Code of the Philippines”, now superseded by Republic Act No. 11232, the Revised Corporation Code of the Philippines.",
+    bd:{parts:[["What it is",["A GOCC"]],["Organized and operating under",["BP 68, the Corporation Code","Now RA 11232, the Revised Corporation Code"]]],
+     acr:[{code:"OOC",tiles:[T("O","Organized"),T("O","Operating"),T("C","under the Code")],say:"“OOC”: Organized and Operating under the Code."}],
+     tip:"Special law = chartered. General law (the Code) = non-chartered."}},
+  gfi:{name:"Government financial institution",kind:"Kind of GOCC",tone:"gold",parent:"gocc",
+    def:"Refers to financial institutions or corporations in which the government directly or indirectly owns majority of the capital stock and which are either: (1) registered with or directly supervised by the Bangko Sentral ng Pilipinas; or (2) collecting or transacting funds or contributions from the public and places them in financial instruments or assets such as deposits, loans, bonds and equity including, but not limited to, the Government Service Insurance System and the Social Security System.",
+    bd:{parts:[["What it is",["Financial institutions or corporations"]],["Ownership",["Government directly or indirectly owns a majority of the capital stock"]],["And either",["(1) Registered with or directly supervised by the BSP; or","(2) Collecting or transacting funds or contributions from the public, and placing them in financial instruments or assets"]],["Such as",["Deposits","Loans","Bonds","Equity"]],["Including",["GSIS","SSS"]]],
+     acr:[{code:"M + B/P",tiles:[T("M","Majority government-owned"),T("B","BSP-registered or supervised"),T("P","Public funds invested")],say:"Majority-owned, then either B or P."},
+          {code:"DLBE",tiles:[T("D","Deposits"),T("L","Loans"),T("B","Bonds"),T("E","Equity")],say:"“Don't Lend Bad Equity.”"}],
+     tip:"Test 1 is always majority ownership. Then only one of B or P is needed, not both."}},
+  related:{name:"Related corporation",kind:"Public corporation",tone:"gold",parent:"pubcorp",
+    def:"Refers to a subsidiary or affiliate of a GOCC.",
+    note:"That is why it straddles the GOCC line on the diagram: half of it is inside, half is outside.",
+    bd:{parts:[["Either",["A subsidiary of a GOCC","An affiliate of a GOCC"]]],
+     acr:[{code:"SA",tiles:[T("S","Subsidiary"),T("A","Affiliate")],say:"Two kinds only."}],
+     tip:"S for Surpasses fifty percent (inside the GOCC line). A for At most fifty percent (outside it)."}},
+  subsidiary:{name:"Subsidiary",kind:"Related corporation, inside the GOCC line",tone:"gold",parent:"related",also:["gocc"],
+    def:"Refers to a corporation where at least a majority of the outstanding capital stock is owned or controlled, directly or indirectly, through one or more intermediaries, by the GOCC.",
+    note:"Because the GOCC holds a majority, a subsidiary is itself a GOCC.",
+    bd:{parts:[["What it is",["A corporation"]],["How much",["At least a majority of the outstanding capital stock"]],["How held",["Owned or controlled","Directly or indirectly","Through one or more intermediaries"]],["By whom",["The GOCC"]]],
+     acr:[{code:"M-OC-DI",tiles:[T("M","Majority"),T("OC","Owned or Controlled"),T("DI","Directly or Indirectly")],say:"“MOC-DI.”"}],
+     tip:"S for Surpasses fifty. More than half means it crosses into the GOCC."}},
+  affiliate:{name:"Affiliate",kind:"Related corporation, outside the GOCC line",tone:"gold",parent:"related",
+    def:"Refers to a corporation fifty percent (50%) or less of the outstanding capital stock of which is owned or controlled, directly or indirectly, by the GOCC.",
+    note:"It is not a GOCC, but it is still a public corporation.",
+    bd:{parts:[["What it is",["A corporation"]],["How much",["Fifty percent (50%) or less of the outstanding capital stock"]],["How held",["Owned or controlled","Directly or indirectly"]],["By whom",["The GOCC"]]],
+     acr:[{code:"≤50-OC-DI",tiles:[T("≤50","Fifty percent or less"),T("OC","Owned or Controlled"),T("DI","Directly or Indirectly")],say:"Same “OC-DI” as a subsidiary; only the number changes."}],
+     tip:"A for At most fifty. Exactly 50% is still an affiliate."}},
+  agency:{name:"Agency of the Government",kind:"Umbrella term",tone:"ink",
+    def:"Refers to any of the various units of the Government, including a department, bureau, office, instrumentality, or government-owned or controlled corporations, or a local government or a distinct unit therein.",
+    note:"Everything inside the outer shaded area is an agency. The Government of the Republic itself sits above it.",
+    bd:{parts:[["What it is",["Any of the various units of the Government"]],["National units",["Department","Bureau","Office","Instrumentality","Government-owned or controlled corporation"]],["Local units",["A local government","A distinct unit therein"]]],
+     acr:[{code:"DBOIG",tiles:[T("D","Department"),T("B","Bureau"),T("O","Office"),T("I","Instrumentality"),T("G","GOCC")],say:"“Don't Bother Our Important Guests…”"},
+          {code:"LD",tiles:[T("L","Local government"),T("D","Distinct unit therein")],say:"“…Lawyers Decide.”"}],
+     tip:"Read the list top-down along the diagram: Department, Bureau, Office, then the ones outside the chain (I, G), then local (L, D)."}},
+  natagency:{name:"National agency",kind:"Umbrella term",tone:"blue",parent:"agency",
+    def:"Refers to a unit of the National Government.",note:"Everything inside the blue area is a national agency.",
+    bd:{parts:[["What it is",["A unit","Of the National Government"]]],
+     acr:[{code:"UNG",tiles:[T("U","Unit"),T("N","National"),T("G","Government")],say:"“A UNG.”"}],
+     tip:"One element only. Contrast with local agency, which has two options."}},
+  locagency:{name:"Local agency",kind:"Umbrella term",tone:"red",parent:"agency",
+    def:"Refers to a local government or a distinct unit therein.",note:"Everything inside the red area is a local agency.",
+    bd:{parts:[["Either",["A local government","A distinct unit therein"]]],
+     acr:[{code:"LG-DU",tiles:[T("LG","Local Government"),T("DU","Distinct Unit therein")],say:"The LGU itself, or a unit inside it."}],
+     tip:"Same “LD” that closes the Agency of the Government acronym."}}
+};
+for(const [id,n] of Object.entries(D)){if(n.ref){const r=D[n.ref];n.def=r.def;n.bd=r.bd;n.note=r.note}}
+for (const [id,n] of Object.entries(D)){
+  if(n.parent)(D[n.parent].kids ||= []).push(id);
+  (n.also||[]).forEach(a=>(D[a].kids ||= []).push(id));
+}
+
+const EDGES=[
+  ["republic","national"],["republic","local","solid",true],
+  ["national","dept"],["dept","bureau"],["bureau","office"],["office","division"],
+  ["dept","office","bypass"],
+  ["local","loffice"],["loffice","ldivision"],
+  ["national","lane","dash",true],
+  ["dept","lane","gold",true]
+];
+
+const tree=document.getElementById('tree'),svg=document.getElementById('wires');
+const el=id=>tree.querySelector(`[data-id="${id}"]`);
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let drawnOnce=false,current=null,lensId='';
+
+function straddle(){
+  const g=document.getElementById('goccBox'),r=document.getElementById('relBox'),s=document.getElementById('subChip'),p=document.getElementById('pubBox');
+  g.classList.remove('cut');r.style.marginBottom='';p.style.paddingBottom='';
+  const rr=r.getBoundingClientRect(),sr=s.getBoundingClientRect();
+  const cut=sr.bottom+10, over=Math.max(0,rr.bottom-cut);
+  g.classList.add('cut');r.style.marginBottom=(-over)+'px';p.style.paddingBottom=(over+14)+'px';
+}
+function box(e,t){const r=e.getBoundingClientRect();return{l:r.left-t.left,r:r.right-t.left,t:r.top-t.top,b:r.bottom-t.top,cx:(r.left+r.right)/2-t.left,cy:(r.top+r.bottom)/2-t.top}}
+function elbow(x1,y1,x2,y2){
+  if(Math.abs(x1-x2)<1)return`M${x1} ${y1}V${y2}`;
+  const m=y1+Math.min(34,(y2-y1)/2),r=Math.min(14,Math.abs(x2-x1)/2,(y2-m)),s=x2>x1?1:-1;
+  return`M${x1} ${y1}V${m-r}Q${x1} ${m} ${x1+s*r} ${m}H${x2-s*r}Q${x2} ${m} ${x2} ${m+r}V${y2}`;
+}
+function draw(){
+  straddle();
+  const t=tree.getBoundingClientRect();
+  svg.setAttribute('width',t.width);svg.setAttribute('height',t.height);svg.setAttribute('viewBox',`0 0 ${t.width} ${t.height}`);
+  let h='';
+  for(const [a,b,style='solid',wideOnly] of EDGES){
+    const A=box(el(a),t),B=box(el(b),t);
+    if(style==='gold'){if(B.l<=A.r+20)continue;h+=`<path class="wire gold" data-e="${a}>${b}" d="M${A.r+6} ${A.cy}H${B.l-2}"/>`;continue}
+    if(style==='bypass'){
+      const x=A.l-22,r=12;
+      h+=`<path class="wire chainw" data-e="${a}>${b}" pathLength="1" d="M${A.l} ${A.cy}H${x+r}Q${x} ${A.cy} ${x} ${A.cy+r}V${B.cy-r}Q${x} ${B.cy} ${x+r} ${B.cy}H${B.l-1}"/>`;continue}
+    if(wideOnly&&B.t<A.b+20)continue;
+    if(a==='republic'&&b==='local'&&Math.abs(el('national').getBoundingClientRect().top-el('local').getBoundingClientRect().top)>4)continue;
+    if(a==='national'&&b==='lane'&&B.l<box(el('dept'),t).r)continue;
+    const cw=['dept','bureau','office'].includes(a)?'chainw':(['local','loffice'].includes(a)?'chainl':'');
+    h+=`<path class="wire ${style==='dash'?'dash':''} ${cw}" data-e="${a}>${b}" d="${elbow(A.cx,A.b,B.cx,B.t)}" ${style==='solid'?'pathLength="1"':''}/>`;
+  }
+  svg.innerHTML=h;
+  if(!drawnOnce&&!reduce){
+    drawnOnce=true;
+    svg.querySelectorAll('path').forEach((p,i)=>{
+      if(p.getAttribute('pathLength')){
+        p.style.strokeDasharray='1';p.style.strokeDashoffset='1';
+        p.animate([{strokeDashoffset:1},{strokeDashoffset:0}],{duration:900,delay:120+i*70,easing:'cubic-bezier(.22,.8,.2,1)',fill:'forwards'})
+          .onfinish=()=>{p.style.strokeDasharray='';p.style.strokeDashoffset=''};
+      }else p.animate([{opacity:0},{opacity:1}],{duration:700,delay:700,fill:'backwards'});
+    });
+  }
+  if(current)light(current);else if(lensId)light(lensId);
+  placeThumb();
+}
+new ResizeObserver(()=>requestAnimationFrame(draw)).observe(tree);
+document.fonts&&document.fonts.ready.then(draw);
+
+const TONE={blue:['var(--blue)','var(--glow-blue)'],red:['var(--red)','var(--glow-red)'],gold:['var(--gold)','var(--glow-gold)'],ink:['var(--ink)','var(--glow-ink)']};
+const LENS={agency:'.realm',natagency:'.t-nat',locagency:'.t-loc'};
+function pathSet(id){
+  const s=new Set(),q=[id];
+  while(q.length){const x=q.shift();if(!x||s.has(x))continue;s.add(x);const n=D[x];if(n){q.push(n.parent);(n.also||[]).forEach(a=>q.push(a))}}
+  return s;
+}
+function light(id){
+  let p;
+  if(LENS[id]){
+    p=new Set([...tree.querySelector(LENS[id]).querySelectorAll('.node')].map(n=>n.dataset.id));
+    p.add(id);p.add('lane');p.add('agency');
+    if(id==='agency'){p.add('natagency');p.add('locagency')}
+  }else p=pathSet(id);
+  tree.style.setProperty('--accent',TONE[D[id].tone][0]);
+  tree.querySelectorAll('[data-realm]').forEach(r=>r.classList.toggle('lit',!!LENS[id]&&(r.dataset.realm===id||id==='agency')));
+  tree.querySelectorAll('.node').forEach(n=>{const on=p.has(n.dataset.id);n.classList.toggle('lit',on);if(on)n.style.setProperty('--glow',TONE[D[n.dataset.id].tone][1])});
+  svg.querySelectorAll('.wire').forEach(w=>{const [a,b]=w.dataset.e.split('>');w.classList.toggle('lit',p.has(a)&&p.has(b)&&!w.classList.contains('gold'))});
+  tree.classList.add('focus');
+}
+function clearLight(){
+  tree.classList.remove('focus');
+  tree.querySelectorAll('.lit').forEach(n=>n.classList.remove('lit'));
+  svg.querySelectorAll('.wire.lit').forEach(w=>w.classList.remove('lit'));
+}
+function restore(){current=null;if(lensId)light(lensId);else clearLight()}
+
+/* segmented lens control */
+const seg=document.getElementById('seg'),thumb=document.getElementById('thumb'),cap=document.getElementById('lensCap');
+function placeThumb(){
+  const b=seg.querySelector('[aria-pressed="true"]'),sr=seg.getBoundingClientRect(),br=b.getBoundingClientRect();
+  thumb.style.width=br.width+'px';thumb.style.transform=`translateX(${br.left-sr.left}px)`;
+  thumb.style.background=lensId?TONE[D[lensId].tone][0]:'var(--card)';
+}
+function setLens(id,fromTab){
+  lensId=id;
+  seg.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.lens===id?'true':'false'));
+  cap.textContent=id?`${D[id].name}: ${D[id].def}`:'';
+  placeThumb();
+  if(!current){id?light(id):clearLight()}
+}
+seg.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;setLens(b.dataset.lens)});
+seg.querySelector('[data-lens=""]').style.color='';
+new ResizeObserver(placeThumb).observe(seg);
+
+/* sheet */
+const dlg=document.getElementById('dlg'),sheet=document.getElementById('sheet');
+let opener=null;
+const short=k=>D[k].name.replace('Government-owned or controlled corporation','GOCC');
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function memHTML(bd){
+  if(!bd)return'';
+  let h=`<section class="mem"><div class="mem-head"><h3>Memorize it</h3><button class="quizbtn" id="quizBtn" aria-pressed="${sheet.classList.contains('quiz')}">${sheet.classList.contains('quiz')?'Show all':'Quiz me'}</button></div>`;
+  h+=`<div class="parts">`+bd.parts.map(([label,items])=>`<div class="part"><div class="plabel">${esc(label)}</div><ol>${items.map(i=>`<li><span class="q">${esc(i)}</span></li>`).join('')}</ol></div>`).join('')+`</div>`;
+  h+=bd.acr.map(a=>`<div class="acr"><div class="tiles">${a.tiles.map(([k,w])=>`<div class="tile"><b>${esc(k)}</b><span class="q">${esc(w)}</span></div>`).join('')}</div><p class="say">${esc(a.say)}</p></div>`).join('');
+  if(bd.cmp){const c=bd.cmp;h+=`<div class="cmp"><div class="cmp-t">${esc(c.title)}</div><div class="cmp-g">${c.cols.map(col=>`<div class="cmp-c"><b>${esc(col.k)}</b><small>${esc(col.full)}</small><dl>${col.rows.map(([a,v])=>`<dt>${esc(a)}</dt><dd><span class="q">${esc(v)}</span></dd>`).join('')}</dl></div>`).join('')}</div><p class="cmp-n"><strong>Same:</strong> ${esc(c.same)}</p><p class="cmp-n"><strong>Different:</strong> ${esc(c.diff)}</p></div>`}
+  if(bd.tip)h+=`<div class="hook"><span>Memory hook</span>${esc(bd.tip)}</div>`;
+  return h+`</section>`;
+}
+function fill(id){
+  const n=D[id],[acc]=TONE[n.tone];
+  sheet.style.setProperty('--accent',acc);
+  sheet.style.setProperty('--accent-ink',n.tone==='gold'?'var(--gold-ink)':acc);
+  document.getElementById('dlgKind').textContent=n.kind;
+  document.getElementById('dlgTitle').textContent=n.full?`${n.name}: ${n.full}`:n.name;
+  const def=document.getElementById('dlgDef');def.innerHTML=`<span class="q">${esc(n.def)}</span>`;
+  document.getElementById('dlgMem').innerHTML=memHTML(n.bd);
+  const up=[n.parent==='lane'?'national':n.parent,...(n.also||[])].filter(Boolean);
+  const down=[...new Set(n.kids||[])].filter(k=>D[k].def);
+  const lat={dept:['instr','regul','chartered','gocc'],gocc:['dept'],regul:['dept']}[id]||[];
+  const grp=(label,ids)=>ids.length?`<h3>${label}</h3><div class="row">${ids.map(k=>`<button data-go="${k}">${short(k)}</button>`).join('')}</div>`:'';
+  let h='';
+  if(n.note)h+=`<h3>${n.cmpWith?'How it differs':'On the diagram'}</h3><p class="note">${esc(n.note)}</p>`;
+  if(LENS[id])h+=`<div class="row"><button data-lensgo="${id}">Keep ${n.name.toLowerCase()} highlighted</button></div>`;
+  h+=grp(n.cmpWith?'A kind of':'Sits within',up)+grp('Contains',down)+(n.cmpWith?grp('Compare with',[n.cmpWith]):'')+grp(id==='dept'?'Laterally connected':'Attached or supervised by',lat);
+  const rel=document.getElementById('dlgRel');rel.innerHTML=h;rel.style.display=h?'':'none';
+}
+function open(id,from){
+  opener=from||opener;current=id;fill(id);light(id);
+  if(!dlg.open){
+    dlg.showModal();
+    if(from&&innerWidth>600){const r=from.getBoundingClientRect(),s=sheet.getBoundingClientRect();sheet.style.transformOrigin=`${r.left+r.width/2-s.left}px ${r.top+r.height/2-s.top}px`}
+    else sheet.style.transformOrigin='50% 50%';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>dlg.classList.add('show')));
+  }else if(!reduce){
+    sheet.animate([{opacity:.4,transform:'scale(.98)'},{opacity:1,transform:'none'}],{duration:320,easing:'cubic-bezier(.22,.8,.2,1)'});
+    sheet.scrollTop=0;
+  }
+}
+function shut(){
+  if(!dlg.open)return;
+  dlg.classList.remove('show');restore();
+  const done=()=>{dlg.close();opener&&opener.focus({preventScroll:true});opener=null};
+  reduce?done():setTimeout(done,380);
+}
+document.addEventListener('click',e=>{
+  if(e.target.closest('#quizBtn')){const on=sheet.classList.toggle('quiz');sheet.querySelectorAll('.q.shown').forEach(q=>q.classList.remove('shown'));const b=document.getElementById('quizBtn');b.textContent=on?'Show all':'Quiz me';b.setAttribute('aria-pressed',on);return}
+  const qq=e.target.closest('.sheet.quiz .q');if(qq){qq.classList.toggle('shown');return}
+  const lg=e.target.closest('[data-lensgo]');if(lg){setLens(lg.dataset.lensgo);shut();return}
+  const n=e.target.closest('.node');if(n&&D[n.dataset.id]?.def){open(n.dataset.id,n);return}
+  const g=e.target.closest('[data-go]');if(g)open(g.dataset.go);
+});
+document.getElementById('close').onclick=shut;
+dlg.addEventListener('click',e=>{if(e.target===dlg)shut()});
+dlg.addEventListener('cancel',e=>{e.preventDefault();shut()});
+let sy=null;
+sheet.addEventListener('touchstart',e=>{sy=sheet.scrollTop>0?null:e.touches[0].clientY},{passive:true});
+sheet.addEventListener('touchmove',e=>{if(sy===null||innerWidth>600)return;const dy=e.touches[0].clientY-sy;if(dy>0){sheet.style.transition='none';sheet.style.transform=`translateY(${dy}px)`}},{passive:true});
+sheet.addEventListener('touchend',e=>{if(sy===null)return;const dy=e.changedTouches[0].clientY-sy;sy=null;sheet.style.transition='';sheet.style.transform='';if(dy>90&&innerWidth<=600)shut()});
+</script>
+</body>
+</html>
